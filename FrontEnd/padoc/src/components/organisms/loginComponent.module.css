@@ -1,0 +1,83 @@
+/* src/components/organisms/loginComponent.module.css */
+
+/* 화면 전체를 감싸는 래퍼 */
+.wrapper {
+  /* min-height: 100vh; */
+  background-color: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+/* 로그인 카드 박스 */
+.card {
+  width: 100%;
+  background-color: var(--light-gray);
+  border-radius: 1rem;     /* 16px */
+  padding: 2rem;           /* 상단·좌우 32px */
+  padding-bottom: 3rem;    /* 하단 여백 48px */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;  /* 내부 요소를 세로로 정렬 */
+}
+
+/* 제목 */
+.title {
+  font-size: 2.25rem;      /* 36px */
+  font-weight: 700;
+  text-align: center;
+  color: var(--primary);
+  margin-bottom: 2rem;     /* 32px */
+}
+
+/* 각 입력 필드 그룹 */
+.field {
+  margin-bottom: 1.5rem;   /* 24px */
+}
+
+/* 에러 메시지 */
+.error {
+  color: var(--danger);
+  font-size: 1.25rem;      /* 20px */
+  margin-bottom: 1.5rem;   /* 24px */
+}
+
+/* 로그인/회원가입 버튼을 감싸는 컨테이너 */
+.buttonGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;               /* 버튼 사이 16px */
+  margin-top: 1rem;        /* 입력 필드 ↔ 버튼 그룹 사이 16px */
+}
+
+/* (필요 시) 로그인 버튼만 추가 여백을 줄 때 */
+/* .submitOverride {
+  margin-bottom: 1rem;
+} */
+
+/* 카드 바깥, 비로그인 테스트 버튼 스타일 */
+.testButton {
+  width: 12rem;            /* 192px */
+  height: 5rem;            /* 80px */
+  font-size: 1.5rem;       /* 24px */
+  font-weight: 600;
+  background-color: var(--accent);
+  color: var(--text);
+  border: none;
+  border-radius: 0.75rem;  /* 12px */
+  cursor: pointer;
+  text-align: center;
+  line-height: 5rem;       /* 버튼 높이와 동일하여 텍스트 수직 중앙 정렬 */
+  transition: background-color 0.2s ease-in-out;
+  margin: 2rem auto 0;     /* 카드 아래 중앙 배치, 위쪽 32px 여백 */
+}
+
+.testButton:hover {
+  background-color: var(--ink-strong);
+}
+
+.testButton:focus {
+  outline: 4px solid var(--ink-strong);
+  outline-offset: 2px;
+}

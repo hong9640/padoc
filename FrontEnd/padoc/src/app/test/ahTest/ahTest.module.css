@@ -1,0 +1,256 @@
+/* 페이지 기본 레이아웃 */
+.page {
+  min-height: 100vh;
+  background-color: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  box-sizing: border-box;
+  position: relative; /* globalLogout 기준 */
+}
+
+/* 프레임 우상단 로그아웃 */
+.globalLogout {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 40;
+}
+
+/* 헤더 영역 */
+.headerBar {
+  text-align: center;
+  margin-bottom: 2rem;
+  max-width: 920px;
+  width: 100%;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 0.5rem 0;
+  text-align: center;
+  /* 텍스트 넘침 방지 */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.subtitle {
+  font-size: 1.25rem;
+  color: var(--sub);
+  margin: 0;
+  text-align: center;
+  line-height: 1.5;
+  /* 텍스트 넘침 방지 */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* 본문 그리드: 기본 1열 → 데스크톱 2열 */
+.grid {
+  max-width: 1160px;
+  width: 100%;
+  display: grid;
+  gap: 24px;
+  grid-template-columns: 1fr; /* 기본 1열 */
+}
+
+@media (min-width: 960px) {
+  .grid {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); /* 축소 가능 */
+  }
+}
+
+.leftCol { min-width: 0; }
+.rightCol { min-width: 0; }
+
+/* 메인 콘텐츠 카드 */
+.contentCard {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(17, 49, 114, 0.06), 0 1px 2px rgba(17, 49, 114, 0.05);
+  padding: clamp(16px, 2.2vw, 20px);
+
+  /* 넘침 방지 */
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* 카드 상단 타이틀 */
+.sectionTitle {
+  color: var(--ink-strong);
+  font-weight: 800;
+  font-size: clamp(1.15rem, 1.7vw, 1.55rem);
+  margin: 0 0 clamp(8px, 1.2vw, 10px);
+  text-align: center;
+  /* 텍스트 넘침 방지 */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* 카드 안 내용 박스 */
+.cardBody {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: clamp(10px, 1.6vw, 12px);
+
+  /* 넘침/축소 안전 */
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* 우측 사이드 카드 */
+.sideCard {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(17, 49, 114, 0.06), 0 1px 2px rgba(17, 49, 114, 0.05);
+  padding: clamp(16px, 2.2vw, 20px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 12px;
+  /* 넘침 방지 */
+  overflow: hidden;
+  min-width: 0;
+}
+
+.sideTitle {
+  margin: 0 0 8px 0;
+  color: var(--ink-strong);
+  font-weight: 800;
+  font-size: 1.2rem;
+  text-align: center;
+  /* 텍스트 넘침 방지 */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.sideHelp {
+  margin: 0 0 12px 0;
+  color: var(--sub);
+  font-size: 0.95rem;
+  text-align: center;
+  /* 텍스트 넘침 방지 */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.uploadBox {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+
+  /* 가운데 정렬 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 12px;
+  /* 넘침 방지 */
+  overflow: hidden;
+  min-width: 0;
+}
+
+.tip {
+  margin-top: 10px;
+  color: var(--sub);
+  font-size: 0.9rem;
+  text-align: center;
+  /* 텍스트 넘침 방지 */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* 하단 네비 */
+.navBox {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+/* ===== 파형 클램프 ===== */
+.waveClamp {
+  inline-size: 100%;
+  max-inline-size: 100%;
+  overflow: hidden; /* 파형 요소를 카드 내부로 클램프 */
+  min-width: 0;
+}
+
+/* 파형이 canvas/svg/div로 렌더돼도 폭을 부모에 맞춤 */
+.waveClamp > canvas,
+.waveClamp > svg,
+.waveClamp > div {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1024px) {
+  .page {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 1rem;
+  }
+  
+  .title {
+    font-size: 2rem;
+  }
+  
+  .subtitle {
+    font-size: 1.1rem;
+  }
+  
+  .sideTitle {
+    font-size: 1.1rem;
+  }
+  
+  .sideHelp {
+    font-size: 0.9rem;
+  }
+  
+  .tip {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .page {
+    padding: 0.75rem;
+  }
+  
+  .title {
+    font-size: 1.75rem;
+  }
+  
+  .subtitle {
+    font-size: 1rem;
+  }
+  
+  .sideTitle {
+    font-size: 1rem;
+  }
+  
+  .sideHelp {
+    font-size: 0.85rem;
+  }
+  
+  .tip {
+    font-size: 0.8rem;
+  }
+}

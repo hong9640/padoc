@@ -1,0 +1,183 @@
+/* signup.module.css */
+
+/* 전체 래퍼 */
+.container {
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 3rem;
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+/* 헤더 */
+.header {
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 2rem;
+}
+
+/* 계정 타입 토글 */
+.toggleGroup {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.toggleButton {
+  flex: 1;
+  padding: 1rem 1.5rem;
+  background-color: var(--background);
+  color: var(--text);
+  border: none;
+  cursor: pointer;
+  font-size: 1.25rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.toggleButtonActive {
+  background-color: var(--primary);
+  color: var(--background);
+}
+
+/* 섹션 스타일 */
+.section {
+  background-color: var(--bg-light);
+  padding: 2rem;
+  border-radius: 0.75rem;
+  margin-bottom: 2rem;
+  border: 1px solid var(--border);
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0 0 1.5rem 0;
+}
+
+.sectionLabel {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+/* 입력 + 버튼 그룹 */
+.inputGroup {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.inputGroup .textInput {
+  flex: 1;
+}
+
+/* 에러 / 확인 메시지 */
+.checkMessage {
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+.checkMessage.ok {
+  color: var(--success);
+}
+
+.checkMessage.error {
+  color: var(--danger);
+}
+
+/* 선택사항 영역 */
+.optionalSection {
+  background-color: var(--bg-light);
+  padding: 2rem;
+  border-radius: 0.75rem;
+  margin-bottom: 2rem;
+  border: 1px solid var(--border);
+}
+
+.select {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border);
+  background-color: var(--background);
+  color: var(--text);
+}
+
+/* 버튼 액션 그룹 */
+.actionGroup {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* 버튼 스타일 */
+.submitButton {
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.submitButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* 폼 필드 그룹 */
+.formField {
+  margin-bottom: 1.5rem;
+}
+
+.formField label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.formField input,
+.formField select {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border);
+  font-size: 1rem;
+  background-color: var(--background);
+  color: var(--text);
+}
+
+.formField input:focus,
+.formField select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-weak);
+}
+
+/* 경고 메시지 */
+.warningMessage {
+  color: var(--warning);
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  line-height: 1.4;
+}
+
+/* 에러 메시지 */
+.errorMessage {
+  color: var(--danger);
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}

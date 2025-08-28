@@ -1,0 +1,275 @@
+/* 테스트 가이드 페이지 스타일 - 메인 페이지와 일관성 유지 */
+
+/* 페이지 기본 레이아웃 */
+.page {
+  min-height: 100vh;
+  background-color: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+/* 헤더 영역 */
+.headerBar {
+  text-align: center;
+  margin-bottom: 2rem;
+  max-width: 920px;
+  width: 100%;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 0.5rem 0;
+  text-align: center;
+  /* 텍스트 넘침 방지 */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.subtitle {
+  font-size: 1.25rem;
+  color: var(--sub);
+  margin: 0;
+  text-align: center;
+  line-height: 1.5;
+  /* 텍스트 넘침 방지 */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* 콘텐츠 카드 */
+.contentCard {
+  max-width: 980px;
+  width: 100%;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(17, 49, 114, 0.06), 0 1px 2px rgba(17, 49, 114, 0.05);
+  padding: clamp(16px, 2.2vw, 20px);
+  margin-bottom: 2rem;
+  /* 넘침 방지 */
+  overflow: hidden;
+  min-width: 0;
+}
+
+.sectionTitle {
+  color: var(--ink-strong);
+  font-weight: 800;
+  font-size: clamp(1.15rem, 1.7vw, 1.55rem);
+  margin: 0 0 clamp(8px, 1.2vw, 10px);
+  text-align: center;
+  /* 텍스트 넘침 방지 */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* 가이드 컨테이너 */
+.guideBody {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(12px, 1.8vw, 16px);
+  text-align: center;
+  /* 넘침 방지 */
+  overflow: hidden;
+  min-width: 0;
+}
+
+/* 안내 패널 */
+.noticePanel {
+  width: 100%;
+  max-width: min(760px, 100%);
+  margin: 0 auto;
+  padding: clamp(14px, 2vw, 18px);
+  border-radius: 16px;
+  border: 1px solid var(--accent-weak);
+  background: linear-gradient(180deg, var(--accent-weak) 0%, var(--accent-weak) 100%);
+  box-shadow: 0 6px 16px rgba(25, 118, 210, 0.06);
+  text-align: left;
+  line-height: 1.7;
+  /* 넘침 방지 */
+  overflow: hidden;
+  min-width: 0;
+}
+
+/* TestGuideContainer 내부 요소들 */
+.noticePanel :global(h1),
+.noticePanel :global(h2),
+.noticePanel :global(h3) {
+  text-align: center;
+  color: var(--ink-strong);
+  font-weight: 800;
+  font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+  margin: 0 0 12px;
+  letter-spacing: -0.01em;
+  /* 텍스트 넘침 방지 */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.noticePanel :global(p) {
+  color: var(--text);
+  font-size: clamp(0.98rem, 1.4vw, 1.05rem);
+  margin: 6px 0 10px;
+  /* 텍스트 넘침 방지 */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.noticePanel :global(ol),
+.noticePanel :global(ul) {
+  margin: 8px auto 0;
+  padding-left: 1.2rem;
+  max-width: 640px;
+  font-size: clamp(0.98rem, 1.4vw, 1.05rem);
+  color: var(--text);
+  /* 텍스트 넘침 방지 */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.noticePanel :global(li) {
+  margin: 4px 0;
+  /* 텍스트 넘침 방지 */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.noticePanel :global(small),
+.noticePanel :global(.subnote) {
+  display: block;
+  margin-top: 6px;
+  color: var(--sub);
+  font-size: clamp(0.9rem, 1.2vw, 0.95rem);
+  /* 텍스트 넘침 방지 */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* 버튼 스타일링 */
+.guideBody :global(button),
+.guideBody :global(a[role="button"]),
+.guideBody :global(.btn),
+.guideBody :global(.moveButton) {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* 하단 액션 영역 */
+.actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  width: 100%;
+  max-width: 35rem;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1024px) {
+  .page {
+    padding: 1.5rem;
+  }
+  
+  .contentCard {
+    margin-bottom: 1.5rem;
+  }
+  
+  .noticePanel {
+    padding: 14px;
+  }
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 1rem;
+  }
+  
+  .title {
+    font-size: 2rem;
+  }
+  
+  .subtitle {
+    font-size: 1.1rem;
+  }
+  
+  .actions :global(button),
+  .actions :global(a[role="button"]),
+  .guideBody :global(button),
+  .guideBody :global(a[role="button"]) {
+    width: min(100%, 24rem);
+  }
+  
+  .noticePanel :global(h1),
+  .noticePanel :global(h2),
+  .noticePanel :global(h3) {
+    font-size: 1.1rem;
+  }
+  
+  .noticePanel :global(p) {
+    font-size: 0.95rem;
+  }
+  
+  .noticePanel :global(ol),
+  .noticePanel :global(ul) {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .page {
+    padding: 0.75rem;
+  }
+  
+  .title {
+    font-size: 1.75rem;
+  }
+  
+  .subtitle {
+    font-size: 1rem;
+  }
+  
+  .noticePanel {
+    padding: 12px;
+  }
+  
+  .actions {
+    margin-top: 0.75rem;
+  }
+  
+  .noticePanel :global(h1),
+  .noticePanel :global(h2),
+  .noticePanel :global(h3) {
+    font-size: 1rem;
+  }
+  
+  .noticePanel :global(p) {
+    font-size: 0.9rem;
+  }
+  
+  .noticePanel :global(ol),
+  .noticePanel :global(ul) {
+    font-size: 0.9rem;
+    padding-left: 1rem;
+  }
+  
+  .noticePanel :global(small),
+  .noticePanel :global(.subnote) {
+    font-size: 0.85rem;
+  }
+}
+
+/* 접근성 개선 */
+@media (prefers-reduced-motion: reduce) {
+  .contentCard,
+  .noticePanel {
+    transition: none;
+  }
+}

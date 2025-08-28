@@ -1,0 +1,290 @@
+/* 의사 페이지 공통 레이아웃 스타일 */
+
+/* 페이지 기본 레이아웃 */
+.page {
+  min-height: 100vh;
+  background-color: var(--doctor-bg);
+  display: flex;
+  width: 100%;
+}
+
+/* 좌측 사이드바 */
+.sidebar {
+  background: var(--doctor-card);
+  border-right: 1px solid var(--doctor-border);
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.sidebarOpen {
+  width: 280px;
+  min-width: 280px;
+  max-width: 280px;
+}
+
+.sidebarClosed {
+  width: 60px;
+  min-width: 60px;
+  max-width: 60px;
+  padding: 2rem 0.5rem;
+}
+
+/* 사이드바 헤더 */
+.sidebarHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--doctor-border);
+}
+
+/* 사용자 정보 */
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.userName {
+  font-weight: 600;
+  color: var(--doctor-text);
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+/* 사이드바가 접혀있을 때 사용자 정보 숨기기 */
+.sidebarClosed .userInfo {
+  display: none;
+}
+
+/* 우측 사이드바 헤더 - 토글 버튼을 왼쪽에 배치 */
+.patientSelectionSection .sidebarHeader {
+  justify-content: flex-start;
+}
+
+.toggleButton {
+  background: var(--doctor-bg);
+  border: 1px solid var(--doctor-border);
+  border-radius: 6px;
+  padding: 0.5rem;
+  cursor: pointer;
+  font-size: 0.8rem;
+  color: var(--doctor-text-light);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+}
+
+.toggleButton:hover {
+  background: var(--gray-light);
+  color: var(--doctor-text);
+  border-color: var(--gray-medium);
+}
+
+/* 네비게이션 */
+.navigation {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--doctor-text-light);
+  font-weight: 500;
+  transition: all 0.2s ease;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.navItem:hover {
+  background: var(--doctor-bg);
+  color: var(--doctor-text);
+}
+
+.navItem.active {
+  background: var(--gray-light);
+  color: var(--doctor-text);
+  font-weight: 600;
+}
+
+.navIcon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+/* 사이드바가 접혀있을 때 네비게이션 아이템 */
+.sidebarClosed .navItem {
+  padding: 0.75rem;
+  justify-content: center;
+}
+
+.sidebarClosed .navItem span:not(.navIcon) {
+  display: none;
+}
+
+/* 메인 콘텐츠 영역 */
+.mainContent {
+  flex: 1;
+  padding: 2rem;
+  background: var(--doctor-bg);
+  min-height: 100vh;
+  transition: all 0.3s ease;
+  margin-right: 2rem; /* 우측 사이드바와의 간격 */
+  margin-left: 2rem; /* 좌측 사이드바와의 간격 */
+  width: calc(100% - 560px - 4rem); /* 전체 너비에서 양쪽 사이드바(280px * 2)와 마진(2rem * 2) 제외 */
+}
+
+.mainContentExpanded {
+  margin-left: 2rem; /* 좌측 사이드바가 접혀있어도 동일한 간격 유지 */
+  width: calc(100% - 340px - 4rem); /* 전체 너비에서 우측 사이드바(280px) + 좌측 사이드바(60px)와 마진(2rem * 2) 제외 */
+}
+
+/* 우측 사이드바가 접혀있을 때 가운데 영역 조정 */
+.mainContentRightClosed {
+  margin-right: 2rem; /* 우측 사이드바가 접혀있어도 동일한 간격 유지 */
+  width: calc(100% - 340px - 4rem); /* 전체 너비에서 좌측 사이드바(280px) + 우측 사이드바(60px)와 마진(2rem * 2) 제외 */
+}
+
+/* 양쪽 사이드바가 모두 접혀있을 때 */
+.mainContentExpanded.mainContentRightClosed {
+  width: calc(100% - 120px - 4rem); /* 전체 너비에서 양쪽 사이드바(60px * 2)와 마진(2rem * 2) 제외 */
+  margin-left: 2rem;
+  margin-right: 2rem;
+}
+
+/* 환자 선택 섹션 (우측 사이드바) */
+.patientSelectionSection {
+  background: var(--doctor-card);
+  border-left: 1px solid var(--doctor-border);
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  height: 100vh;
+  top: 0;
+  right: 0;
+  flex-shrink: 0;
+  overflow-y: auto;
+  z-index: 100;
+  transition: all 0.3s ease;
+}
+
+.patientSelectionSection.sidebarOpen {
+  width: 280px;
+  min-width: 280px;
+  max-width: 280px;
+}
+
+.patientSelectionSection.sidebarClosed {
+  width: 60px;
+  min-width: 60px;
+  max-width: 60px;
+  padding: 2rem 0.5rem;
+}
+
+/* 우측 사이드바가 접혀있을 때 내용 숨기기 */
+.patientSelectionSection.sidebarClosed > div:not(.sidebarHeader) {
+  display: none;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1200px) {
+  .sidebar.sidebarOpen {
+    width: 250px;
+    min-width: 250px;
+    max-width: 250px;
+  }
+  
+  .mainContent {
+    padding: 1.5rem;
+  }
+  
+  .patientSelectionSection.sidebarOpen {
+    width: 250px;
+    min-width: 250px;
+    max-width: 250px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .page {
+    flex-direction: column;
+  }
+  
+  .sidebar {
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    height: auto;
+    position: static;
+    top: auto;
+    padding: 1rem;
+  }
+  
+  .sidebarClosed {
+    display: none;
+  }
+  
+  .mainContent {
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+    padding: 1rem;
+  }
+  
+  .patientSelectionSection {
+    position: static;
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    height: auto;
+    border-left: none;
+    border-top: 1px solid var(--doctor-border);
+    padding: 1rem;
+  }
+  
+  .patientSelectionSection.sidebarClosed {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .mainContent {
+    padding: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .mainContent {
+    padding: 0.5rem;
+  }
+}
+
+/* 접근성 개선 */
+@media (prefers-reduced-motion: reduce) {
+  .navItem,
+  .sidebar,
+  .mainContent,
+  .patientSelectionSection {
+    transition: none;
+  }
+}

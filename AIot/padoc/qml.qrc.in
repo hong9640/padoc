@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+@QML_FILE_TAGS@
+    </qresource>
+</RCC>

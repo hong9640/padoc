@@ -1,0 +1,328 @@
+@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===== 핵심 컬러 팔레트 (4-5개 컬러로 구성) ===== */
+:root {
+  /* 1. 브랜드 컬러 (Primary) */
+  --primary: #1E3A8A;          /* 메인 브랜드 컬러 - 딥블루 */
+  
+  /* 2. 보조 컬러 (Secondary) */
+  --secondary: #6B7280;        /* 서브 텍스트, 보조 요소 */
+  
+  /* 3. 배경 컬러 (Background) */
+  --background: #FFFFFF;       /* 메인 배경 */
+  
+  /* 4. 강조 컬러 (Accent) */
+  --accent: #1976D2;          /* 강조, 링크, 버튼 */
+  
+  /* 5. 경계선 컬러 (Border) */
+  --border: #E5E7EB;          /* 경계선, 구분선 */
+}
+
+/* ===== 세부 컬러 변수 (핵심 컬러 기반) ===== */
+:root {
+  /* 배경 관련 */
+  --bg: var(--background);
+  --card: var(--background);
+  --bg-light: #EAF3FF;        /* 연한 배경 (기존 #eaf3ff) */
+  
+  /* 텍스트 관련 */
+  --ink: var(--primary);
+  --ink-strong: #0B2453;      /* 더 진한 브랜드 컬러 */
+  --text: #111827;            /* 본문 텍스트 */
+  --sub: var(--secondary);
+  
+  /* 강조 관련 */
+  --accent-weak: #E8F2FF;     /* 연한 강조 배경 */
+  
+  /* 상태 컬러 */
+  --danger: #D32F2F;          /* 위험, 삭제 */
+  --success: #8CC93E;         /* 성공, 완료 */
+  --warning: #E02A29;         /* 경고, 주의 */
+  
+  /* 기존 사용 컬러들 */
+  --beige: #F5F5DC;           /* 베이지 배경 */
+  --white: #FFFFFF;           /* 흰색 */
+  --gray-light: #EDF2F7;      /* 연한 회색 */
+  --gray-medium: #CCCCCC;     /* 중간 회색 */
+  --gray-dark: #666666;       /* 진한 회색 */
+  
+  /* 라디오 버튼 컬러 */
+  --radio-yes: #E76F51;       /* 예 버튼 선택 컬러 */
+  --radio-yes-text: #8A3B2E;  /* 예 버튼 텍스트 컬러 */
+  --radio-no: #1976D2;        /* 아니오 버튼 선택 컬러 */
+  --radio-no-text: #0B4F9C;   /* 아니오 버튼 텍스트 컬러 */
+  
+  /* 결과 배너 컬러 */
+  --banner-success-bg: #E8F5E9;    /* 성공 배너 배경 */
+  --banner-success-border: #A5D6A7; /* 성공 배너 테두리 */
+  --banner-success-text: #1B5E20;   /* 성공 배너 텍스트 */
+  --banner-warning-bg: #FFF3E0;    /* 경고 배너 배경 */
+  --banner-warning-border: #FFE0B2; /* 경고 배너 테두리 */
+  --banner-warning-text: #8A4B08;   /* 경고 배너 텍스트 */
+  --banner-danger-bg: #FFEBEE;      /* 위험 배너 배경 */
+  --banner-danger-border: #EF9A9A;  /* 위험 배너 테두리 */
+  --banner-danger-text: #B71C1C;    /* 위험 배너 텍스트 */
+  
+  /* 추가 컬러 변수들 */
+  --blue-light: #E6ECFF;      /* 연한 파랑 배경 */
+  --green-light: #E8F5E9;     /* 연한 초록 배경 */
+  --orange-light: #FFF3E0;    /* 연한 주황 배경 */
+  --cyan-light: #E0F7FA;      /* 연한 청록 배경 */
+  --red-light: #FF9999;       /* 연한 빨강 */
+  --purple-light: #E0E7FF;    /* 연한 보라 */
+  --purple-medium: #6366F1;   /* 중간 보라 */
+  --gray-bg: #F0F0F0;         /* 회색 배경 */
+  --dark-blue: #1C2A53;       /* 진한 파랑 */
+  --light-blue: #4A90E2;      /* 연한 파랑 */
+  --light-gray: #F4F6F9;      /* 연한 회색 */
+  --border-light: #DDD;       /* 연한 테두리 */
+  --text-dark: #263238;       /* 진한 텍스트 */
+  --text-light: #555;         /* 연한 텍스트 */
+  
+  /* 컴포넌트에서 사용되는 추가 색상들 */
+  --brand-blue: #113172;      /* 브랜드 블루 (기존 하드코딩된 색상) */
+  --success-green: #4CAF50;   /* 성공 그린 */
+  --warning-orange: #F59E0B;  /* 경고 오렌지 */
+  --sunday-red: #FF0000;      /* 일요일 빨강 */
+  --saturday-blue: #0000FF;   /* 토요일 파랑 */
+  --trained-green: #00FF00;   /* 훈련 완료 그린 */
+  --reserved-orange: #FFA500; /* 예약 오렌지 */
+  --danger-light: #FEE2E2;    /* 연한 위험 색상 */
+  --danger-border: #FCA5A5;   /* 위험 테두리 색상 */
+  
+  /* Doctor 페이지 전용 색상 */
+  --doctor-primary: #1E3A8A;      /* 의사 페이지 메인 컬러 */
+  --doctor-secondary: #6B7280;    /* 의사 페이지 보조 컬러 */
+  --doctor-accent: #1976D2;       /* 의사 페이지 강조 컬러 */
+  --doctor-bg: #F8F9FA;           /* 의사 페이지 배경 */
+  --doctor-card: #FFFFFF;         /* 의사 페이지 카드 배경 */
+  --doctor-border: #E5E7EB;       /* 의사 페이지 테두리 */
+  --doctor-text: #111827;         /* 의사 페이지 텍스트 */
+  --doctor-text-light: #6B7280;   /* 의사 페이지 연한 텍스트 */
+  --doctor-success: #10B981;      /* 의사 페이지 성공 색상 */
+  --doctor-warning: #F59E0B;      /* 의사 페이지 경고 색상 */
+  --doctor-danger: #EF4444;       /* 의사 페이지 위험 색상 */
+  --doctor-info: #3B82F6;         /* 의사 페이지 정보 색상 */
+  
+  /* 차트 및 데이터 시각화 색상 */
+  --chart-primary: #3B82F6;       /* 차트 메인 색상 */
+  --chart-secondary: #10B981;     /* 차트 보조 색상 */
+  --chart-accent: #F59E0B;        /* 차트 강조 색상 */
+  --chart-danger: #EF4444;        /* 차트 위험 색상 */
+  --chart-success: #10B981;       /* 차트 성공 색상 */
+  --chart-warning: #F59E0B;       /* 차트 경고 색상 */
+  --chart-info: #06B6D4;          /* 차트 정보 색상 */
+  --chart-purple: #8B5CF6;        /* 차트 보라 색상 */
+  --chart-pink: #EC4899;          /* 차트 핑크 색상 */
+  --chart-gray: #6B7280;          /* 차트 회색 색상 */
+  
+  /* 차트 배경 및 그리드 색상 */
+  --chart-bg: #FFFFFF;            /* 차트 배경 색상 */
+  --chart-grid: #E5E7EB;          /* 차트 그리드 색상 */
+  --chart-text: #111827;          /* 차트 텍스트 색상 */
+  --chart-border: #E5E7EB;        /* 차트 테두리 색상 */
+}
+
+/* ===== 테마 시스템 ===== */
+
+/* 라이트 테마 (기본) */
+[data-theme="light"] {
+  --background: #FFFFFF;
+  --foreground: #111827;
+  --bg: #FFFFFF;
+  --card: #FFFFFF;
+  --text: #111827;
+  --sub: #6B7280;
+  --border: #E5E7EB;
+  --bg-light: #EAF3FF;
+  --gray-light: #EDF2F7;
+  --gray-medium: #CCCCCC;
+  --gray-dark: #666666;
+  --gray-bg: #F0F0F0;
+  --text-dark: #263238;
+  --text-light: #555;
+  
+  /* 라이트 테마에서의 추가 색상들 */
+  --brand-blue: #113172;
+  --success-green: #4CAF50;
+  --warning-orange: #F59E0B;
+  --sunday-red: #FF0000;
+  --saturday-blue: #0000FF;
+  --trained-green: #00FF00;
+  --reserved-orange: #FFA500;
+  
+  /* 배경색이 있는 요소 내부 텍스트 색상 */
+  --text-on-primary: #FFFFFF;      /* primary 배경 위의 텍스트 */
+  --text-on-dark: #FFFFFF;         /* 어두운 배경 위의 텍스트 */
+  --text-on-accent: #FFFFFF;       /* accent 배경 위의 텍스트 */
+  --text-on-warning: #FFFFFF;      /* warning 배경 위의 텍스트 */
+  --text-on-success: #FFFFFF;      /* success 배경 위의 텍스트 */
+  --text-on-danger: #FFFFFF;       /* danger 배경 위의 텍스트 */
+}
+
+/* 다크 테마 */
+[data-theme="dark"] {
+  --background: #0A0A0A;
+  --foreground: #EDEDED;
+  --bg: #0A0A0A;
+  --card: #1A1A1A;
+  --text: #EDEDED;
+  --sub: #9CA3AF;
+  --border: #374151;
+  --bg-light: #1A1A1A;
+  --gray-light: #374151;
+  --gray-medium: #6B7280;
+  --gray-dark: #9CA3AF;
+  --gray-bg: #2A2A2A;
+  --text-dark: #EDEDED;
+  --text-light: #9CA3AF;
+  
+  /* 다크 테마에서의 추가 색상들 */
+  --brand-blue: #4A90E2;
+  --success-green: #66BB6A;
+  --warning-orange: #FFB74D;
+  --sunday-red: #EF5350;
+  --saturday-blue: #42A5F5;
+  --trained-green: #66BB6A;
+  --reserved-orange: #FFB74D;
+  
+  /* Doctor 페이지 전용 색상 - 다크 테마 */
+  --doctor-primary: #4A90E2;      /* 의사 페이지 메인 컬러 */
+  --doctor-secondary: #9CA3AF;    /* 의사 페이지 보조 컬러 */
+  --doctor-accent: #60A5FA;       /* 의사 페이지 강조 컬러 */
+  --doctor-bg: #1A1A1A;           /* 의사 페이지 배경 */
+  --doctor-card: #2A2A2A;         /* 의사 페이지 카드 배경 */
+  --doctor-border: #374151;       /* 의사 페이지 테두리 */
+  --doctor-text: #EDEDED;         /* 의사 페이지 텍스트 */
+  --doctor-text-light: #9CA3AF;   /* 의사 페이지 연한 텍스트 */
+  --doctor-success: #34D399;      /* 의사 페이지 성공 색상 */
+  --doctor-warning: #FBBF24;      /* 의사 페이지 경고 색상 */
+  --doctor-danger: #F87171;       /* 의사 페이지 위험 색상 */
+  --doctor-info: #60A5FA;         /* 의사 페이지 정보 색상 */
+  
+  /* 차트 및 데이터 시각화 색상 - 다크 테마 */
+  --chart-primary: #60A5FA;       /* 차트 메인 색상 */
+  --chart-secondary: #34D399;     /* 차트 보조 색상 */
+  --chart-accent: #FBBF24;        /* 차트 강조 색상 */
+  --chart-danger: #F87171;        /* 차트 위험 색상 */
+  --chart-success: #34D399;       /* 차트 성공 색상 */
+  --chart-warning: #FBBF24;       /* 차트 경고 색상 */
+  --chart-info: #22D3EE;          /* 차트 정보 색상 */
+  --chart-purple: #A78BFA;        /* 차트 보라 색상 */
+  --chart-pink: #F472B6;          /* 차트 핑크 색상 */
+  --chart-gray: #9CA3AF;          /* 차트 회색 색상 */
+  
+  /* 차트 배경 및 그리드 색상 - 다크 테마 */
+  --chart-bg: #2A2A2A;            /* 차트 배경 색상 */
+  --chart-grid: #374151;          /* 차트 그리드 색상 */
+  --chart-text: #EDEDED;          /* 차트 텍스트 색상 */
+  --chart-border: #374151;        /* 차트 테두리 색상 */
+  
+  /* 다크 테마에서의 누락된 색상들 */
+  --ink: #4A90E2;
+  --ink-strong: #7BB3F0;
+  --accent-weak: #1A3A5F;
+  --danger: #EF5350;
+  --success: #66BB6A;
+  --warning: #FFB74D;
+  --beige: #2A2A2A;
+  --white: #1A1A1A;
+  --blue-light: #1A3A5F;
+  --green-light: #1A3A1A;
+  --orange-light: #3A2A1A;
+  --cyan-light: #1A3A3A;
+  --red-light: #3A1A1A;
+  --purple-light: #2A1A3A;
+  --dark-blue: #4A90E2;
+  --light-blue: #7BB3F0;
+  --light-gray: #2A2A2A;
+  --border-light: #374151;
+  
+  /* 라디오 버튼 컬러 - 다크 테마 */
+  --radio-yes: #FF6B4A;
+  --radio-yes-text: #FFB3A3;
+  --radio-no: #4A90E2;
+  --radio-no-text: #7BB3F0;
+  
+  /* 결과 배너 컬러 - 다크 테마 */
+  --banner-success-bg: #1A3A1A;
+  --banner-success-border: #4A7A4A;
+  --banner-success-text: #66BB6A;
+  --banner-warning-bg: #3A2A1A;
+  --banner-warning-border: #7A4A4A; 
+  --banner-warning-text: #FFB74D;
+  --banner-danger-bg: #3A1A1A;
+  --banner-danger-border: #7A4A4A;
+  --banner-danger-text: #EF5350;
+  
+  /* 위험 관련 색상 - 다크 테마 */
+  --danger-light: #3A1A1A;
+  --danger-border: #7A4A4A;
+  
+  /* 배경색이 있는 요소 내부 텍스트 색상 */
+  --text-on-primary: #FFFFFF;      /* primary 배경 위의 텍스트 */
+  --text-on-dark: #FFFFFF;         /* 어두운 배경 위의 텍스트 */
+  --text-on-accent: #FFFFFF;       /* accent 배경 위의 텍스트 */
+  --text-on-warning: #FFFFFF;      /* warning 배경 위의 텍스트 */
+  --text-on-success: #FFFFFF;      /* success 배경 위의 텍스트 */
+  --text-on-danger: #FFFFFF;       /* danger 배경 위의 텍스트 */
+}
+
+
+
+
+
+/* ===== 공통 스타일 ===== */
+.connected-list, 
+.connection-request-list {
+  display: grid;
+  gap: 8px;
+}
+
+.connected-item,
+.connection-request-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.icon-danger {
+  background: var(--card);
+  color: var(--danger);
+  border: 1px solid var(--danger-border);
+  width: 36px; 
+  height: 36px; 
+  border-radius: 10px;
+}
+
+.icon-danger:hover { 
+  background: var(--danger-light); 
+}
+
+.icon-danger:focus-visible { 
+  outline: 3px solid var(--danger-border); 
+  outline-offset: 2px; 
+}
+
+/* ===== Tailwind 테마 설정 ===== */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* ===== 기본 바디 스타일 ===== */
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}

@@ -1,0 +1,68 @@
+:root {
+  --ink: var(--brand-blue);
+  --text: var(--text);
+  --sub: var(--secondary);
+  --card: var(--card);
+  --border: var(--border);
+  --panel: var(--card);
+}
+
+.wrap {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 16px;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+@media (max-width: 980px) { 
+  .wrap { 
+    grid-template-columns: 1fr; 
+    gap: 12px;
+  } 
+}
+
+@media (max-width: 768px) {
+  .wrap {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .wrap {
+    gap: 6px;
+  }
+}
+
+.calendarCol { background: var(--panel); border-radius: 12px; }
+
+.sideCol { display: grid; gap: 12px; }
+
+.statCard {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  box-shadow: 0 1px 2px rgba(17,49,114,.05);
+}
+
+.statTitle {
+  font-weight: 800;
+  color: var(--ink-strong);
+  margin: 0 0 8px 0;
+  font-size: 1.05rem;
+}
+
+.statValue {
+  font-size: 1.35rem;
+  color: var(--ink);
+  margin: 0;
+}
+
+.reserveList { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+.reserveItem { color: var(--text); font-size: .95rem; }
+
+.emptyText { color: var(--sub); font-size: .92rem; }
+
+.status { padding: 1rem; color: var(--ink); }
+.statusError { padding: 1rem; color: var(--danger); }

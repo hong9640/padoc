@@ -1,0 +1,361 @@
+/* src/app/patient/profile/patientProfile.module.css */
+
+.page {
+  min-height: 100vh;
+  background: var(--bg);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* 환자 데이터 섹션 */
+.patientDataSection {
+  background: var(--doctor-card);
+  border-radius: 16px;
+  padding: 2rem;
+  flex: 1;
+  min-height: 80vh;
+}
+
+/* 환자 데이터 컨테이너 */
+.patientData {
+  background: var(--doctor-card);
+  border-radius: 16px;
+  overflow: hidden;
+  min-width: 0;
+}
+
+/* 데이터 콘텐츠 */
+.dataContent {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* 섹션 컨테이너 */
+.sectionContainer {
+  background: var(--doctor-card);
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid var(--doctor-border);
+}
+
+.sectionTitle {
+  color: var(--doctor-primary);
+  font-weight: 700;
+  font-size: 1.4rem;
+  margin: 0 0 1.25rem 0;
+  text-align: center;
+  padding-bottom: 0.75rem;
+  position: relative;
+}
+
+.sectionTitle::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: var(--doctor-accent);
+  border-radius: 2px;
+}
+
+/* 프로필 정보 */
+.profileInfo {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .profileInfo {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.infoRow {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  background: var(--doctor-bg);
+  border-radius: 8px;
+  border: 1px solid var(--doctor-border);
+}
+
+.label {
+  font-weight: 600;
+  color: var(--doctor-primary);
+  font-size: 0.95rem;
+}
+
+.value {
+  color: var(--doctor-text);
+  word-break: break-word;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.actionButtons {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+/* 메시지 스타일 */
+.loadingMessage,
+.errorMessage,
+.noDataMessage,
+.selectPatientMessage {
+  text-align: center;
+  padding: 2rem;
+  border-radius: 12px;
+  background: var(--doctor-bg);
+  box-shadow: 0 1px 3px rgba(30, 58, 138, 0.05);
+  border: 1px solid var(--doctor-border);
+}
+
+.loadingMessage p {
+  color: var(--doctor-text);
+  font-size: 1.1rem;
+  margin: 0;
+  font-weight: 500;
+}
+
+.errorMessage {
+  background: var(--doctor-danger);
+  color: white;
+  border-color: var(--doctor-danger);
+}
+
+.errorMessage p {
+  color: white;
+  font-size: 1rem;
+  margin: 0;
+  font-weight: 500;
+}
+
+.noDataMessage p,
+.selectPatientMessage p {
+  color: var(--doctor-text-light);
+  font-size: 1.1rem;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* 로딩 컨테이너 */
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: var(--doctor-bg);
+}
+
+.loadingContent {
+  text-align: center;
+  padding: 3rem;
+  background: var(--doctor-card);
+  border: 1px solid var(--doctor-border);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(30, 58, 138, 0.1);
+}
+
+.loadingText {
+  color: var(--doctor-primary);
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1200px) {
+  .page {
+    padding: 1.5rem;
+    gap: 1.5rem;
+  }
+  
+  .patientDataSection {
+    padding: 1.5rem;
+  }
+  
+  .sectionContainer {
+    padding: 1.25rem;
+  }
+  
+  .sectionTitle {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .page {
+    padding: 1rem;
+    gap: 1rem;
+  }
+  
+  .patientDataSection {
+    padding: 1.5rem;
+  }
+  
+  .dataContent {
+    gap: 1.5rem;
+  }
+  
+  .sectionContainer {
+    padding: 1.25rem;
+  }
+  
+  .sectionTitle {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .infoRow {
+    grid-template-columns: 120px 1fr;
+    padding: 0.75rem 1rem;
+    gap: 0.75rem;
+  }
+  
+  .label {
+    font-size: 0.9rem;
+  }
+  
+  .value {
+    font-size: 0.95rem;
+  }
+  
+  .actionButtons {
+    margin-top: 1rem;
+    gap: 0.75rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 0.75rem;
+    gap: 0.75rem;
+  }
+  
+  .patientDataSection {
+    padding: 1rem;
+  }
+  
+  .dataContent {
+    gap: 1rem;
+  }
+  
+  .sectionContainer {
+    padding: 1rem;
+  }
+  
+  .sectionTitle {
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .infoRow {
+    grid-template-columns: 100px 1fr;
+    padding: 0.75rem;
+    gap: 0.5rem;
+  }
+  
+  .label {
+    font-size: 0.85rem;
+  }
+  
+  .value {
+    font-size: 0.9rem;
+  }
+  
+  .actionButtons {
+    margin-top: 1rem;
+    gap: 0.5rem;
+    flex-direction: column;
+  }
+  
+  .actionButtons > * {
+    width: 100%;
+  }
+  
+  .loadingMessage,
+  .errorMessage,
+  .noDataMessage,
+  .selectPatientMessage {
+    padding: 1.5rem;
+  }
+  
+  .loadingMessage p,
+  .noDataMessage p,
+  .selectPatientMessage p {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .page {
+    padding: 0.5rem;
+    gap: 0.5rem;
+  }
+  
+  .patientDataSection {
+    padding: 0.75rem;
+  }
+  
+  .dataContent {
+    gap: 0.75rem;
+  }
+  
+  .sectionContainer {
+    padding: 0.75rem;
+  }
+  
+  .sectionTitle {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .infoRow {
+    grid-template-columns: 80px 1fr;
+    padding: 0.5rem;
+    gap: 0.5rem;
+  }
+  
+  .label {
+    font-size: 0.8rem;
+  }
+  
+  .value {
+    font-size: 0.85rem;
+  }
+  
+  .loadingMessage,
+  .errorMessage,
+  .noDataMessage,
+  .selectPatientMessage {
+    padding: 1rem;
+  }
+  
+  .loadingMessage p,
+  .noDataMessage p,
+  .selectPatientMessage p {
+    font-size: 0.95rem;
+  }
+}
+
+/* 접근성 개선 */
+@media (prefers-reduced-motion: reduce) {
+  .sectionContainer,
+  .infoRow {
+    /* 호버링 이펙트 제거됨 */
+  }
+}
+
+

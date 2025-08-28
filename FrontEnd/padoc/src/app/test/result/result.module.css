@@ -1,0 +1,330 @@
+/* 배경/프레임 */
+.page {
+  min-height: 100vh;
+  background-color: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+.surface {
+  max-width: 1200px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 헤더 */
+.headerBar { 
+  text-align: center;
+  margin-bottom: 2rem;
+  max-width: 920px;
+  width: 100%;
+}
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 0.5rem 0;
+  text-align: center;
+}
+
+/* 카드 그리드 */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 2rem;
+  max-width: 1200px;
+  width: 100%;
+}
+@media (max-width: 1024px) { 
+  .grid { 
+    grid-template-columns: 1fr 1fr; 
+    gap: 20px;
+  } 
+}
+@media (max-width: 768px) { 
+  .grid { 
+    grid-template-columns: 1fr; 
+    gap: 16px;
+  } 
+}
+
+/* 카드 공통 */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(17, 49, 114, 0.06), 0 1px 2px rgba(17, 49, 114, 0.05);
+  padding: clamp(16px, 2.2vw, 20px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  min-height: 200px;
+  /* 넘침 방지 */
+  overflow: hidden;
+  min-width: 0;
+}
+.sectionTitle {
+  color: var(--ink-strong);
+  font-weight: 800;
+  font-size: clamp(1.15rem, 1.7vw, 1.55rem);
+  margin: 0 0 clamp(8px, 1.2vw, 10px);
+  text-align: center;
+  /* 텍스트 넘침 방지 */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+/* 네이비 알약형 강조 */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary);
+  color: var(--text-on-primary);
+  border-radius: 999px;
+  padding: 10px 16px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.2px;
+  margin: 16px 0;
+  min-width: 100px;
+  text-align: center;
+  /* 텍스트 넘침 방지 */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
+.helper {
+  margin-top: 12px;
+  color: var(--sub);
+  font-size: 0.95rem;
+  text-align: center;
+  line-height: 1.5;
+  /* 텍스트 넘침 방지 */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+/* 차트 카드 */
+.chartCard {
+  background: var(--card);
+  color: var(--ink-strong);
+  padding: 16px;
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  /* 넘침 방지 */
+  overflow: hidden;
+  min-width: 0;
+}
+.chartInner {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--card);
+  border-radius: 8px;
+  padding: 8px;
+  min-height: 280px;
+  /* 넘침 방지 */
+  overflow: hidden;
+  min-width: 0;
+}
+
+/* 차트 정보 영역 */
+.chartInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 1rem;
+}
+
+.normalRangeInfo {
+  font-size: 0.9rem;
+  text-align: center;
+  color: var(--success-text);
+  font-weight: 600;
+  padding: 6px 12px;
+  background: var(--success-bg);
+  border: 1px solid var(--success-border);
+  border-radius: 6px;
+  /* 텍스트 넘침 방지 */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.chartFooter {
+  font-size: 0.95rem;
+  text-align: center;
+  color: var(--ink-strong);
+  font-weight: 600;
+  padding: 8px;
+  background: var(--gray-light);
+  border-radius: 8px;
+  /* 텍스트 넘침 방지 */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* 결과 배너 */
+.resultBanner {
+  margin-top: 2rem;
+  border-radius: 16px;
+  padding: clamp(16px, 2.2vw, 20px);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 8px 20px rgba(17, 49, 114, 0.06), 0 1px 2px rgba(17, 49, 114, 0.05);
+  max-width: 800px;
+  width: 100%;
+  /* 넘침 방지 */
+  overflow: hidden;
+  min-width: 0;
+}
+.resultLabel {
+  font-weight: 800;
+  font-size: 1.2rem;
+  text-align: center;
+  /* 텍스트 넘침 방지 */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+.resultText {
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.5;
+  margin: 0;
+  /* 텍스트 넘침 방지 */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+/* 상태 톤 */
+.bannerGood {
+  background: var(--banner-success-bg);
+  border-color: var(--banner-success-border);
+  color: var(--banner-success-text);
+}
+.bannerAlert {
+  background: var(--banner-warning-bg);
+  border-color: var(--banner-warning-border);
+  color: var(--banner-warning-text);
+}
+.bannerDanger {
+  background: var(--banner-danger-bg);
+  border-color: var(--banner-danger-border);
+  color: var(--banner-danger-text);
+}
+
+/* 하단 액션 */
+.actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  width: 100%;
+  max-width: 35rem;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1024px) {
+  .page {
+    padding: 1.5rem;
+  }
+  
+  .chartCard {
+    min-height: 280px;
+  }
+  
+  .chartInner {
+    min-height: 240px;
+  }
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 1rem;
+  }
+  
+  .title {
+    font-size: 2rem;
+  }
+  
+  .chartCard {
+    min-height: 240px;
+  }
+  
+  .chartInner {
+    min-height: 200px;
+  }
+  
+  .pill {
+    font-size: 1rem;
+    padding: 8px 12px;
+  }
+  
+  .helper {
+    font-size: 0.9rem;
+  }
+  
+  .normalRangeInfo {
+    font-size: 0.85rem;
+    padding: 5px 10px;
+  }
+  
+  .chartFooter {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .page {
+    padding: 0.75rem;
+  }
+  
+  .title {
+    font-size: 1.75rem;
+  }
+  
+  .chartCard {
+    min-height: 200px;
+  }
+  
+  .chartInner {
+    min-height: 160px;
+  }
+  
+  .sectionTitle {
+    font-size: 1.1rem;
+  }
+  
+  .resultLabel {
+    font-size: 1.1rem;
+  }
+  
+  .resultText {
+    font-size: 1rem;
+  }
+  
+  .normalRangeInfo {
+    font-size: 0.8rem;
+    padding: 4px 8px;
+  }
+  
+  .chartFooter {
+    font-size: 0.85rem;
+  }
+}

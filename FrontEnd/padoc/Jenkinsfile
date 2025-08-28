@@ -1,0 +1,105 @@
+pipeline {
+    agent any
+    
+    environment {
+        DOCKER_IMAGE = 'padoc'
+        CONTAINER_NAME = 'padoc-container'
+        PORT = '3000'
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                echo '📥 코드 체크아웃 중...'
+                checkout scm
+            }
+        }
+        
+        stage('Setup Environment') {
+            steps {
+                echo '📋 환경 설정 중...'
+                sh '''
+                    if [ ! -f .env ]; then
+                        echo "NEXT_PUBLIC_BE_API_URL=${NEXT_PUBLIC_BE_API_URL}" > .env
+                    fi
+                '''
+            }
+        }
+        
+        stage('Install Dependencies') {
+            steps {
+                echo '📦 의존성 설치 중...'
+                sh 'npm ci'
+            }
+        }
+        
+        stage('Cleanup Containers') {
+            steps {
+                echo '🧹 기존 컨테이너 정리 중...'
+                sh '''
+                    docker stop ${CONTAINER_NAME} 2>/dev/null || true
+                    docker rm ${CONTAINER_NAME} 2>/dev/null || true
+                    docker system prune -f
+                '''
+            }
+        }
+        
+        stage('Build Application') {
+            steps {
+                echo '🔨 애플리케이션 빌드 중...'
+                sh 'npm run build'
+            }
+        }
+        
+        stage('Build Docker Image') {
+            steps {
+                echo '🐳 Docker 이미지 빌드 중...'
+                sh 'docker build -t ${DOCKER_IMAGE} .'
+            }
+        }
+        
+        stage('Deploy Container') {
+            steps {
+                echo '🚀 컨테이너 배포 중...'
+                sh 'docker run -d -p ${PORT}:${PORT} --name ${CONTAINER_NAME} ${DOCKER_IMAGE}'
+            }
+        }
+        
+        stage('Health Check') {
+            steps {
+                echo '🏥 헬스체크 중...'
+                script {
+                    def retries = 30
+                    def waitTime = 2
+                    
+                    for (int i = 0; i < retries; i++) {
+                        try {
+                            sh 'curl -f http://localhost:${PORT}'
+                            echo "✅ 애플리케이션이 정상적으로 응답합니다."
+                            break
+                        } catch (Exception e) {
+                            if (i == retries - 1) {
+                                echo "❌ 헬스체크 실패"
+                                sh 'docker logs ${CONTAINER_NAME}'
+                                error "애플리케이션이 응답하지 않습니다."
+                            }
+                            echo "⏳ 애플리케이션 시작 대기 중... (${i+1}/${retries})"
+                            sleep waitTime
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    post {
+        always {
+            echo '📊 배포 완료!'
+            echo '🌐 애플리케이션 URL: http://localhost:${PORT}'
+        }
+        failure {
+            echo '❌ 배포 실패!'
+            sh 'docker logs ${CONTAINER_NAME}'
+        }
+    }
+}

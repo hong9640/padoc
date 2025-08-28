@@ -1,0 +1,439 @@
+/* 의사 대시보드 페이지 스타일 */
+
+/* 헤더 스타일 */
+.header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  padding: 1.25rem;
+  background: var(--doctor-bg);
+  border-radius: 8px;
+  color: var(--doctor-primary);
+}
+
+.title {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+/* 환자 데이터 섹션 */
+.patientDataSection {
+  background: var(--doctor-card);
+  border-radius: 16px;
+  padding: 2rem;
+}
+
+/* 환자 데이터 컨테이너 */
+.patientData {
+  background: var(--doctor-card);
+  border-radius: 16px;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.patientTitle {
+  color: var(--doctor-primary);
+  font-weight: 700;
+  font-size: 1.75rem;
+  margin: 0 0 1.5rem 0;
+  text-align: center;
+  border-bottom: 3px solid var(--doctor-accent);
+  padding-bottom: 0.75rem;
+}
+
+/* 데이터 콘텐츠 */
+.dataContent {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* MPT 섹션 - 기본적으로 세로 배치 */
+.mptSection {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* MPT 섹션 가로 배치 (사이드바가 둘 다 접혀있을 때) */
+.mptSectionHorizontal {
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+.mptSectionHorizontal .sectionContainer {
+  flex: 1;
+  min-width: 0;
+  margin-bottom: 0;
+}
+
+.mptSectionHorizontal .chartContainer {
+  min-height: 400px;
+  max-width: none;
+}
+
+.mptSectionHorizontal .chartSection {
+  gap: 1rem;
+}
+
+/* 문장 섹션 - 기본적으로 세로 배치 */
+.sentenceSection {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* 문장 섹션 가로 배치 (사이드바가 둘 다 접혀있을 때) */
+.sentenceSectionHorizontal {
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+.sentenceSectionHorizontal .sectionContainer {
+  flex: 1;
+  min-width: 0;
+  margin-bottom: 0;
+}
+
+/* 섹션 컨테이너 */
+.sectionContainer {
+  background: var(--doctor-card);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.sectionTitle {
+  color: var(--doctor-primary);
+  font-weight: 700;
+  font-size: 1.4rem;
+  margin: 0 0 1.25rem 0;
+  text-align: center;
+  padding-bottom: 0.75rem;
+  position: relative;
+}
+
+.sectionTitle::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: var(--doctor-accent);
+  border-radius: 2px;
+}
+
+/* 테이블 컨테이너 */
+.tableContainer {
+  background: var(--doctor-card);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+/* 차트 섹션 */
+.chartSection {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+}
+
+/* 비교 패널 */
+.comparisonPanel {
+  background: var(--doctor-bg);
+  border-radius: 8px;
+  padding: 1.25rem;
+  box-shadow: 0 1px 3px rgba(30, 58, 138, 0.05);
+  border-left: 4px solid var(--doctor-accent);
+}
+
+.comparisonTitle {
+  color: var(--doctor-primary);
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin: 0 0 12px 0;
+  text-align: left;
+}
+
+.comparisonContent {
+  color: var(--doctor-text);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.comparisonContent p {
+  margin: 6px 0;
+}
+
+.comparisonContent strong {
+  color: var(--doctor-primary);
+  font-weight: 600;
+}
+
+/* 차트 컨테이너 */
+.chartContainer {
+  background: var(--doctor-card);
+  border-radius: 12px;
+  padding: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 600px;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* 메시지 스타일 */
+.loadingMessage,
+.errorMessage,
+.noDataMessage,
+.noChartMessage,
+.selectPatientMessage {
+  text-align: center;
+  padding: 2rem;
+  border-radius: 12px;
+  background: var(--doctor-bg);
+  box-shadow: 0 1px 3px rgba(30, 58, 138, 0.05);
+}
+
+.loadingMessage p {
+  color: var(--doctor-text);
+  font-size: 1.1rem;
+  margin: 0;
+  font-weight: 500;
+}
+
+.errorMessage {
+  background: var(--doctor-danger);
+  color: white;
+}
+
+.errorMessage p {
+  color: white;
+  font-size: 1rem;
+  margin: 0;
+  font-weight: 500;
+}
+
+.noDataMessage p,
+.noChartMessage p,
+.selectPatientMessage p {
+  color: var(--doctor-text-light);
+  font-size: 1.1rem;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* 로딩 컨테이너 */
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: var(--doctor-bg);
+}
+
+.loadingContent {
+  text-align: center;
+  padding: 3rem;
+  background: var(--doctor-card);
+  border: 1px solid var(--doctor-border);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(30, 58, 138, 0.1);
+}
+
+.loadingText {
+  color: var(--doctor-primary);
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1200px) {
+  .sidebar.sidebarOpen {
+    width: 250px;
+    min-width: 250px;
+    max-width: 250px;
+  }
+  
+  .mainContent {
+    padding: 1.5rem;
+  }
+  
+  .patientSelectionSection.sidebarOpen {
+    width: 250px;
+    min-width: 250px;
+    max-width: 250px;
+  }
+  
+  /* 중간 화면에서는 가로 배치 유지하되 간격 조정 */
+  .mptSectionHorizontal,
+  .sentenceSectionHorizontal {
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .page {
+    flex-direction: column;
+  }
+  
+  .sidebar {
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    height: auto;
+    position: static;
+    top: auto;
+    padding: 1rem;
+  }
+  
+  .sidebarClosed {
+    display: none;
+  }
+  
+  .mainContent {
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+    padding: 1rem;
+  }
+  
+  .patientSelectionSection {
+    position: static;
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    height: auto;
+    border-left: none;
+    border-top: 1px solid var(--doctor-border);
+    padding: 1rem;
+  }
+  
+  .patientSelectionSection.sidebarClosed {
+    display: none;
+  }
+  
+  .patientDataSection {
+    padding: 1.5rem;
+  }
+  
+  .sectionContainer {
+    padding: 1.25rem;
+  }
+  
+  .chartContainer {
+    min-height: 500px;
+    max-width: 700px;
+  }
+  
+  /* 작은 화면에서는 가로 배치를 세로로 변경 */
+  .mptSectionHorizontal,
+  .sentenceSectionHorizontal {
+    flex-direction: column;
+    gap: 2rem;
+  }
+  
+  .mptSectionHorizontal .sectionContainer,
+  .sentenceSectionHorizontal .sectionContainer {
+    flex: none;
+    margin-bottom: 1.5rem;
+  }
+  
+  .mptSectionHorizontal .chartContainer {
+    min-height: 500px;
+    max-width: 700px;
+  }
+}
+
+@media (max-width: 768px) {
+  .mainContent {
+    padding: 0.75rem;
+  }
+  
+  .patientTitle {
+    font-size: 1.5rem;
+  }
+  
+  .sectionTitle {
+    font-size: 1.3rem;
+  }
+  
+  .comparisonTitle {
+    font-size: 1.1rem;
+  }
+  
+  .comparisonContent {
+    font-size: 0.9rem;
+  }
+  
+  .chartContainer {
+    min-height: 450px;
+    padding: 1.5rem;
+    max-width: 600px;
+  }
+  
+  .loadingMessage p,
+  .noDataMessage p,
+  .noChartMessage p,
+  .selectPatientMessage p {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .mainContent {
+    padding: 0.5rem;
+  }
+  
+  .patientDataSection {
+    padding: 1rem;
+  }
+  
+  .patientTitle {
+    font-size: 1.3rem;
+  }
+  
+  .sectionTitle {
+    font-size: 1.2rem;
+  }
+  
+  .sectionContainer {
+    padding: 1rem;
+  }
+  
+  .comparisonPanel {
+    padding: 1rem;
+  }
+  
+  .comparisonTitle {
+    font-size: 1rem;
+  }
+  
+  .comparisonContent {
+    font-size: 0.85rem;
+  }
+  
+  .chartContainer {
+    min-height: 400px;
+    padding: 1rem;
+    max-width: 500px;
+  }
+}
+
+/* 접근성 개선 */
+@media (prefers-reduced-motion: reduce) {
+  .navItem,
+  .sidebar,
+  .mainContent,
+  .patientSelectionSection,
+  .sectionContainer,
+  .chartContainer {
+    transition: none;
+  }
+}

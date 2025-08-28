@@ -1,0 +1,16 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+BE_venv/
+
+# 기타
+.idea/
+.vscode/

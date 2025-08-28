@@ -1,0 +1,56 @@
+# 파이프라인의 전체 단계를 정의합니다. build -> deploy 순서로 실행됩니다.
+stages:
+  - build
+  - deploy
+
+# 1. Node.js 프론트엔드 빌드 작업
+build_frontend:
+  stage: build
+  image: node:20
+  script:
+    - echo "프론트엔드 프로젝트를 빌드합니다..."
+    - cd ./FrontEnd/padoc
+    - rm package-lock.json
+    - npm install
+    - npm run build
+  artifacts:
+    paths:
+      - ./FrontEnd/padoc/.next/ # 빌드 결과물을 다음 스테이지로 전달
+      - ./FrontEnd/padoc/public/ 
+      - ./FrontEnd/padoc/package.json 
+      - ./FrontEnd/padoc/package-lock.json 
+    expire_in: 1 hour
+  tags:
+    - node
+
+build_and_push_image:
+  stage: deploy
+  # Docker 명령어를 사용하기 위한 Docker-in-Docker 설정
+  image: docker:20.10.16
+  services:
+    - name: docker:20.10.16-dind
+      command: ["--insecure-registry=i13a106.p.ssafy.io:5000"]
+  variables:
+    DOCKER_TLS_CERTDIR: "" # <--- 이 라인 추가
+  before_script:
+    # GitLab CI/CD에 미리 정의된 변수들을 사용하여 로그인합니다.
+    # $CI_REGISTRY_USER, $CI_REGISTRY_PASSWORD, $CI_REGISTRY
+    # 이 변수들은 GitLab Container Registry를 사용할 때 자동으로 생성됩니다.
+    # Docker Hub를 사용한다면 Settings > CI/CD > Variables에서 직접 변수를 만들어야 합니다.
+    - echo "$REGISTRY_PASSWORD" | docker login -u "$REGISTRY_USERNAME" --password-stdin $REGISTRY_PATH
+  script:
+    - echo "최종 Docker 이미지를 빌드하고 푸시합니다..."
+    - docker build -t $REGISTRY_PATH/padoc_frontend:latest -f ./FrontEnd/padoc/Dockerfile ./FrontEnd/padoc
+    - docker build -t $REGISTRY_PATH/padoc_backend:latest -f ./BackEnd/Dockerfile.app ./BackEnd
+    - docker build -t $REGISTRY_PATH/padoc_voice_analysis:latest -f ./BackEnd/Dockerfile.VAS ./BackEnd
+    
+    - echo "빌드된 Docker 이미지를 푸시합니다..."
+    - docker push $REGISTRY_PATH/padoc_frontend:latest
+    - docker push $REGISTRY_PATH/padoc_backend:latest
+    - docker push $REGISTRY_PATH/padoc_voice_analysis:latest
+  tags:
+    - docker
+  needs:
+    - build_frontend
+  only:
+    - master

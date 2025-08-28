@@ -1,0 +1,10 @@
+{
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "python.defaultInterpreterPath": "C:\\Users\\minwoo\\code_depository\\PJT1\\S13P11A106\\BackEnd\\BE_venv\\Scripts\\python.exe",
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter"
+    },
+    "[json]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    }
+}

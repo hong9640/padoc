@@ -1,0 +1,179 @@
+.title {
+  font-size: 1.7rem;   /* 기존보다 +0.2rem */
+  font-weight: 800;    /* 더 두껍게 */
+  text-align: center;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--ink);   /* 전역 토큰 사용 */
+  margin: 0 0 8px;
+  /* 텍스트 넘침 방지 */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.innerWrap {
+  width: 100%;
+  max-width: 760px;   /* 원래 useAutoSizing이 목표로 잡던 값 */
+  margin: 0 auto;     /* 가운데 정렬 */
+  box-sizing: border-box;
+  /* 넘침 방지 */
+  overflow: hidden;
+  min-width: 0;
+}
+
+/* 혹시 모를 자식 초과 방지 */
+.cardBody > * { max-width: 100%; }
+
+/* 문진 컨테이너 스타일 */
+.questionnaireContainer {
+  background-color: var(--gray-light);
+  border-radius: 20px;
+  padding: 24px;
+  width: 100%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  /* 넘침 방지 */
+  overflow: hidden;
+  min-width: 0;
+}
+
+/* 문진 제목 스타일 */
+.questionnaireTitle {
+  font-size: 1.45rem;
+  line-height: 1.6;
+  text-align: initial;
+  color: var(--text);
+  margin-bottom: 20px;
+  font-weight: 600;
+  /* 텍스트 넘침 방지 */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* 질문 목록 컨테이너 */
+.questionsList {
+  padding-left: 20px;
+}
+
+/* 개별 질문 스타일 */
+.questionItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  padding: 16px;
+  background-color: var(--card);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  /* 넘침 방지 */
+  overflow: hidden;
+  min-width: 0;
+}
+
+.questionItem:hover {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  border-color: var(--accent);
+}
+
+/* 질문 텍스트 스타일 */
+.questionText {
+  flex: 1;
+  font-size: 1.1rem;
+  line-height: 1.5;
+  color: var(--text);
+  margin-right: 20px;
+  font-weight: 500;
+  margin: auto 0;
+  /* 텍스트 넘침 방지 */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+/* 라디오 버튼 그룹 스타일 */
+.radioGroup {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+  align-items: center;
+}
+
+/* 질문 번호 스타일 */
+.questionNumber {
+  font-weight: 700;
+  color: var(--primary);
+  margin-right: 8px;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .title {
+    font-size: 1.5rem;
+  }
+  
+  .questionnaireTitle {
+    font-size: 1.25rem;
+  }
+  
+  .questionItem {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  
+  .questionText {
+    margin-right: 0;
+    margin-bottom: 8px;
+    font-size: 1rem;
+  }
+  
+  .radioGroup {
+    justify-content: center;
+  }
+  
+  .questionnaireContainer {
+    padding: 16px;
+  }
+  
+  .questionsList {
+    padding-left: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 1.3rem;
+  }
+  
+  .questionnaireTitle {
+    font-size: 1.1rem;
+  }
+  
+  .questionText {
+    font-size: 0.95rem;
+  }
+  
+  .questionnaireContainer {
+    padding: 12px;
+  }
+  
+  .questionItem {
+    padding: 12px;
+  }
+  
+  .questionsList {
+    padding-left: 5px;
+  }
+}
+
+/* 긴 질문 텍스트를 위한 스타일 */
+.questionText br {
+  margin-bottom: 4px;
+}
+
+/* 선택된 질문 강조 */
+.questionItem.selected {
+  border-color: var(--accent);
+  background-color: var(--accent-weak);
+}

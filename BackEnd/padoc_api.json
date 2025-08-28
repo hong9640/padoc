@@ -1,0 +1,2180 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "PADOC API",
+    "version": "1.0",
+    "description": "파킨슨병 음성 데이터 분석 및 관리 플랫폼(PADAC) API 명세서"
+  },
+  "servers": [
+    {
+      "url": "http://i13a106.p.ssafy.io:8000",
+      "description": "test server"
+    },
+    {
+      "url": "http://127.0.0.1:8001",
+      "description": "test server"
+    },
+    {
+      "url": "https://i13a106.p.ssafy.io/api",
+      "description": "docker env test"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "로그인 API를 통해 발급받은 JWT Access Token을 'Bearer ' 접두사와 함께 입력합니다."
+      }
+    },
+    "schemas": {
+      "SuccessResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "응답 결과 메시지",
+            "example": "요청이 성공적으로 처리되었습니다."
+          },
+          "data": {
+            "type": "object",
+            "nullable": true,
+            "description": "요청에 대한 결과 데이터"
+          }
+        }
+      },
+      "CheckResponse": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "boolean",
+            "description": "확인 결과 (true/false)"
+          },
+          "message": {
+            "type": "string",
+            "description": "결과에 대한 부가 설명",
+            "example": "사용 가능한 아이디입니다."
+          }
+        },
+        "required": [
+          "result"
+        ]
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "에러 발생 시간",
+            "example": "2024-05-16T10:00:00.000+00:00"
+          },
+          "status": {
+            "type": "integer",
+            "description": "HTTP 상태 코드",
+            "example": 404
+          },
+          "error": {
+            "type": "string",
+            "description": "HTTP 상태 메시지",
+            "example": "Not Found"
+          },
+          "code": {
+            "type": "string",
+            "description": "애플리케이션 고유 에러 코드",
+            "example": "RESOURCE_NOT_FOUND"
+          },
+          "message": {
+            "type": "string",
+            "description": "에러에 대한 상세 메시지",
+            "example": "요청한 리소스를 찾을 수 없습니다."
+          }
+        },
+        "required": [
+          "timestamp",
+          "status",
+          "error",
+          "message"
+        ]
+      },
+      "AccountProfile": {
+        "type": "object",
+        "description": "사용자의 공통 계정 정보",
+        "properties": {
+          "login_id": {
+            "type": "string",
+            "description": "로그인 ID",
+            "example": "user123"
+          },
+          "full_name": {
+            "type": "string",
+            "description": "사용자 전체 이름",
+            "example": "홍길동"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "이메일 주소 (고유)",
+            "example": "user@example.com"
+          },
+          "phone_number": {
+            "type": "string",
+            "description": "휴대폰 번호",
+            "example": "010-1234-5678"
+          },
+          "role": {
+            "type": "string",
+            "description": "사용자 역할",
+            "enum": [
+              "patient",
+              "doctor",
+              "admin"
+            ],
+            "example": "patient"
+          }
+        },
+        "required": [
+          "login_id",
+          "full_name",
+          "role"
+        ]
+      },
+      "DoctorProfile": {
+        "description": "의사 프로필 정보",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AccountProfile"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "address": {
+                "type": "string",
+                "description": "병원 주소",
+                "example": "서울시 서초구"
+              },
+              "gender": {
+                "type": "string",
+                "description": "성별",
+                "enum": [
+                  "male",
+                  "female",
+                  "other"
+                ],
+                "example": "male"
+              },
+              "age": {
+                "type": "integer",
+                "description": "나이",
+                "example": 45
+              },
+              "valid_license_id": {
+                "type": "string",
+                "description": "의료면허 번호",
+                "example": "123456"
+              },
+              "is_verified": {
+                "type": "boolean",
+                "description": "의료면허 유효성 여부",
+                "example": true
+              }
+            },
+            "required": [
+              "valid_license_id",
+              "is_verified"
+            ]
+          }
+        ]
+      },
+      "DoctorSignup": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/DoctorProfile"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "password": {
+                "type": "string",
+                "format": "password",
+                "description": "비밀번호",
+                "example": "strongpassword123!"
+              }
+            },
+            "required": [
+              "password"
+            ]
+          }
+        ]
+      },
+      "PatientProfile": {
+        "description": "환자/보호자 프로필 정보",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AccountProfile"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "address": {
+                "type": "string",
+                "description": "거주지 주소",
+                "example": "서울시 강남구"
+              },
+              "gender": {
+                "type": "string",
+                "description": "성별",
+                "enum": [
+                  "male",
+                  "female",
+                  "other"
+                ],
+                "example": "male"
+              },
+              "age": {
+                "type": "integer",
+                "description": "나이",
+                "example": 32
+              }
+            }
+          }
+        ]
+      },
+      "PatientSignup": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/PatientProfile"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "password": {
+                "type": "string",
+                "format": "password",
+                "description": "비밀번호",
+                "example": "securepassword123!"
+              }
+            },
+            "required": [
+              "password"
+            ]
+          }
+        ]
+      },
+      "PatientWithAccountId": {
+        "description": "DB ID가 포함된 환자 정보",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/PatientProfile"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "account_id": {
+                "type": "integer",
+                "description": "계정의 고유 DB ID",
+                "readOnly": true,
+                "example": 1
+              }
+            }
+          }
+        ],
+        "required": [
+          "account_id"
+        ]
+      },
+      "DoctorWithAccountId": {
+        "description": "DB ID가 포함된 의사 정보",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/DoctorProfile"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "account_id": {
+                "type": "integer",
+                "description": "계정의 고유 DB ID",
+                "readOnly": true,
+                "example": 1
+              }
+            }
+          }
+        ],
+        "required": [
+          "account_id"
+        ]
+      },
+      "LoginRequest": {
+        "type": "object",
+        "description": "로그인 요청 데이터",
+        "properties": {
+          "login_id": {
+            "type": "string",
+            "description": "사용자 ID",
+            "example": "patient123"
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "description": "비밀번호",
+            "example": "securepassword123!"
+          }
+        },
+        "required": [
+          "login_id",
+          "password"
+        ]
+      },
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "description": "JWT 또는 Bearer Token",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+          },
+          "role": {
+            "type": "string",
+            "description": "사용자 유형",
+            "enum": [
+              "patient",
+              "doctor"
+            ],
+            "example": "patient"
+          },
+          "account_id": {
+            "type": "integer",
+            "description": "계정의 고유 DB ID"
+          }
+        }
+      },
+      "ScheduleDate": {
+        "type": "object",
+        "description": "병원 방문 스케줄 날짜 데이터",
+        "properties": {
+          "schedule_id": {
+            "type": "integer",
+            "description": "DB 내의 스케줄 고유 ID",
+            "readOnly": true,
+            "example": 1
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "병원 방문 날짜 (YYYY-MM-DD)",
+            "example": "2025-08-10"
+          }
+        },
+        "required": [
+          "schedule_id",
+          "patient_id",
+          "date"
+        ]
+      },
+      "ScheduleListResponse": {
+        "type": "object",
+        "properties": {
+          "appointment_dates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ScheduleDate"
+            }
+          }
+        }
+      },
+      "AdvTrainingInformationList": {
+        "type": "object",
+        "description": "심화 훈련 결과 목록",
+        "properties": {
+          "trainings": {
+            "type": "array",
+            "description": "심화 훈련 결과 목록",
+            "items": {
+              "$ref": "#/components/schemas/AdvTrainingInformation"
+            }
+          }
+        }
+      },
+      "VoiceInformation": {
+        "type": "object",
+        "description": "음성 분석 정보",
+        "properties": {
+          "voice_id": {
+            "type": "integer",
+            "description": "음성 정보 고유 ID",
+            "readOnly": true,
+            "example": 1
+          },
+          "patient_id": {
+            "type": "integer",
+            "description": "환자 고유 ID",
+            "example": 101
+          },
+          "related_voice_info_id": {
+            "type": "integer",
+            "nullable": true,
+            "description": "관련된 다른 음성 정보의 ID (예: 훈련 전/후 데이터 연결)",
+            "example": 5
+          },
+          "file_path": {
+            "type": "string",
+            "description": "저장된 음성 파일 경로",
+            "example": "/voices/patient101/voice_ah_20240517.wav"
+          },
+          "recording_type": {
+            "type": "string",
+            "description": "음성 데이터의 종류 ('a' 발음, 문장 발음 등)",
+            "enum": [
+              "None",
+              "voice_ah",
+              "voice_sentence"
+            ],
+            "example": "voice_ah"
+          },
+          "ah_features": {
+            "nullable": true,
+            "description": "'아(a)' 발음과 같은 단일 모음 음성에 대한 음향 분석 데이터입니다. 음성 종류(recording_type)가 'voice_ah'일 때 사용됩니다.",
+            "$ref": "#/components/schemas/VoiceAhFeatures"
+          },
+          "sentence_features": {
+            "nullable": true,
+            "description": "문장 발음에 대한 분석 데이터입니다. 음성 종류(recording_type)가 'voice_sentence'일 때 사용됩니다.",
+            "$ref": "#/components/schemas/VoiceSentenceFeaturess"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "생성 일시",
+            "readOnly": true,
+            "example": "2024-05-17T14:30:00Z"
+          }
+        }
+      },
+      "VoiceAhFeatures": {
+        "type": "object",
+        "description": "'아(a)' 발음 등 단일 모음 음성에 대한 음향 분석 데이터 지표",
+        "properties": {
+          "jitter": {
+            "$ref": "#/components/schemas/JitterMetrics"
+          },
+          "shimmer": {
+            "$ref": "#/components/schemas/ShimmerMetrics"
+          },
+          "hnr": {
+            "type": "number",
+            "format": "float",
+            "description": "HNR (Harmonics-to-Noise Ratio)"
+          },
+          "nhr": {
+            "type": "number",
+            "format": "float",
+            "description": "NHR (Noise-to-Harmonics Ratio)"
+          },
+          "f0": {
+            "type": "number",
+            "format": "float",
+            "description": "기본 주파수"
+          },
+          "max_f0": {
+            "type": "number",
+            "format": "float",
+            "description": "최대 기본 주파수"
+          },
+          "min_f0": {
+            "type": "number",
+            "format": "float",
+            "description": "최소 기본 주파수"
+          }
+        }
+      },
+      "VoiceSentenceFeaturess": {
+        "type": "object",
+        "description": "문장 발음에 대한 분석 데이터 지표",
+        "properties": {
+          "cpp": {
+            "type": "number",
+            "format": "float",
+            "description": "CPP (Cepstral Peak Prominence)"
+          },
+          "csid": {
+            "type": "number",
+            "format": "float",
+            "description": "CSID (Cepstral Spectral Index of Dysphonia)"
+          },
+          "sampling_data": {
+            "nullable": true,
+            "description": "음성의 시간-주파수-에너지 샘플링 데이터",
+            "$ref": "#/components/schemas/VoiceSamplingData"
+          }
+        }
+      },
+      "VoiceSamplingData": {
+        "type": "object",
+        "description": "음성의 샘플링 데이터",
+        "properties": {
+          "sampling_rate": {
+            "type": "integer",
+            "description": "샘플링 레이트 (Hz)",
+            "example": 44100
+          },
+          "data_points": {
+            "type": "array",
+            "description": "샘플링된 데이터 포인트 배열",
+            "items": {
+              "$ref": "#/components/schemas/SampledDataPoint"
+            }
+          }
+        }
+      },
+      "SampledDataPoint": {
+        "type": "object",
+        "description": "샘플링된 음성 데이터 포인트 (에너지 및 주파수)",
+        "properties": {
+          "energy": {
+            "type": "number",
+            "format": "float",
+            "description": "에너지 (dB)"
+          },
+          "frequency": {
+            "type": "number",
+            "format": "float",
+            "description": "주파수 (Hz)"
+          }
+        }
+      },
+      "JitterMetrics": {
+        "type": "object",
+        "description": "Jitter 관련 음성 지표",
+        "properties": {
+          "local": {
+            "type": "number",
+            "format": "float",
+            "description": "Jitter (Local)"
+          },
+          "rap": {
+            "type": "number",
+            "format": "float",
+            "description": "Jitter (RAP)"
+          },
+          "ppq5": {
+            "type": "number",
+            "format": "float",
+            "description": "Jitter (PPQ5)"
+          },
+          "ddp": {
+            "type": "number",
+            "format": "float",
+            "description": "Jitter (DDP)"
+          }
+        }
+      },
+      "ShimmerMetrics": {
+        "type": "object",
+        "description": "Shimmer 관련 음성 지표",
+        "properties": {
+          "local": {
+            "type": "number",
+            "format": "float",
+            "description": "Shimmer (Local)"
+          },
+          "apq3": {
+            "type": "number",
+            "format": "float",
+            "description": "Shimmer (APQ3)"
+          },
+          "apq5": {
+            "type": "number",
+            "format": "float",
+            "description": "Shimmer (APQ5)"
+          },
+          "apq11": {
+            "type": "number",
+            "format": "float",
+            "description": "Shimmer (APQ11)"
+          },
+          "dda": {
+            "type": "number",
+            "format": "float",
+            "description": "Shimmer (DDA)"
+          }
+        }
+      },
+      "AdvTrainingInformation": {
+        "type": "object",
+        "properties": {
+          "avg_score": {
+            "type": "integer"
+          },
+          "progress": {
+            "type": "string",
+            "description": "훈련 진행 상태",
+            "enum": [
+              "level 1",
+              "level 2",
+              "level 3",
+              "level 4"
+            ],
+            "example": "level3"
+          }
+        }
+      },
+      "CheckDuplicateIdRequest": {
+        "type": "object",
+        "properties": {
+          "login_id": {
+            "type": "string",
+            "description": "중복 확인할 아이디",
+            "example": "testuser"
+          }
+        },
+        "required": [
+          "login_id"
+        ]
+      },
+      "VerifyPasswordRequest": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string",
+            "format": "password",
+            "description": "사용자의 현재 비밀번호",
+            "example": "securepassword123!"
+          }
+        },
+        "required": [
+          "password"
+        ]
+      },
+      "VerifyDoctorLicenseRequest": {
+        "type": "object",
+        "properties": {
+          "valid_license_id": {
+            "type": "string",
+            "description": "의료 면허 번호",
+            "example": "12345678"
+          }
+        },
+        "required": [
+          "valid_license_id"
+        ]
+      },
+      "AhScreeningResult": {
+        "type": "object",
+        "description": "ah 음성 데이터를 기반으로 진단한 결과",
+        "$ref": "#/components/schemas/VoiceAhFeatures"
+      },
+      "SentenceScreeningResult": {
+        "type": "object",
+        "description": "문장 음성 데이터를 기반으로 진단한 결과",
+        "properties": {
+          "ai_score": {
+            "type": "integer",
+            "description": "ai가 추론한 질환이 있을 가능성(%)",
+            "example": 20
+          }
+        }
+      },
+      "ScreeningRequest": {
+        "type": "object",
+        "properties": {
+          "voice_file": {
+            "type": "string",
+            "format": "binary",
+            "description": "분석할 음성 파일 (wav, mp3 등)"
+          },
+          "recording_type": {
+            "type": "string",
+            "enum": [
+              "None",
+              "voice_ah",
+              "voice_sentence"
+            ],
+            "description": "`voice_ah` 또는 `voice_sentence` 유형"
+          }
+        },
+        "required": [
+          "voice_file",
+          "recording_type"
+        ]
+      },
+      "BasicTrainingUploadRequest": {
+        "type": "object",
+        "description": "훈련 음성 파일 제출 요청 시 받는 데이터",
+        "properties": {
+          "file_name": {
+            "type": "string",
+            "description": "S3에 업로드할 파일의 원본 이름, 업로드 시에 파일 이름은 적절하게 바뀌어서 업로드됩니다.",
+            "example": "training_voice_20250804.wav"
+          },
+          "type": {
+            "type": "string",
+            "description": "음성 녹음의 종류",
+            "enum": [
+              "voice_ah",
+              "voice_sentence"
+            ],
+            "example": "voice_ah"
+          },
+          "related_voice_record_id": {
+            "type": "integer",
+            "description": "연관된 다른 음성 기록의 ID (예: 기초 훈련 전/후 데이터 연결)",
+            "nullable": true,
+            "example": 1
+          }
+        },
+        "required": [
+          "file_name",
+          "type"
+        ]
+      },
+      "ConnectionRequestPayload": {
+        "type": "object",
+        "properties": {
+          "patient_id": {
+            "type": "integer",
+            "description": "요청을 보낼 환자의 DB 아이디",
+            "example": 546
+          }
+        },
+        "required": [
+          "patient_id"
+        ]
+      },
+      "UpdateProfileRequest": {
+        "type": "object",
+        "description": "수정할 사용자 프로필 정보",
+        "properties": {
+          "login_id": {
+            "type": "string",
+            "description": "로그인 ID",
+            "example": "user123"
+          },
+          "full_name": {
+            "type": "string",
+            "description": "사용자 전체 이름",
+            "example": "홍길동"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "이메일 주소 (고유)",
+            "example": "user@example.com"
+          },
+          "phone_number": {
+            "type": "string",
+            "description": "휴대폰 번호",
+            "example": "010-1234-5678"
+          },
+          "address": {
+            "type": "string",
+            "description": "거주지 주소",
+            "example": "서울시 강남구"
+          },
+          "gender": {
+            "type": "string",
+            "description": "성별",
+            "enum": [
+              "male",
+              "female",
+              "other"
+            ],
+            "example": "male"
+          },
+          "age": {
+            "type": "integer",
+            "description": "나이",
+            "example": 32
+          }
+        }
+      },
+      "VoiceInformationList": {
+        "type": "object",
+        "description": "음성 분석 정보 목록",
+        "properties": {
+          "voices": {
+            "type": "array",
+            "description": "음성 분석 정보 목록",
+            "items": {
+              "$ref": "#/components/schemas/VoiceInformation"
+            }
+          }
+        }
+      },
+      "UpdateConnectionStatus": {
+        "type": "object",
+        "properties": {
+          "connection_id": {
+            "type": "integer",
+            "description": "상태를 변경할 연결의 고유 ID",
+            "example": 123
+          }
+        },
+        "required": [
+          "connection_id"
+        ]
+      },
+      "PatientOrderPayload": {
+        "type": "object",
+        "properties": {
+          "patient_order": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "description": "환자 고유 ID"
+            },
+            "description": "정렬된 환자 ID 목록"
+          }
+        },
+        "required": [
+          "patient_order"
+        ]
+      },
+      "Connection": {
+        "type": "object",
+        "description": "의사-환자 간 데이터 열람 연결 정보 (patient_doctor_access 테이블)",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "연결의 고유 ID (PK)",
+            "readOnly": true,
+            "example": 1
+          },
+          "doctor_id": {
+            "type": "integer",
+            "description": "의사의 계정 ID (FK to accounts.id)",
+            "example": 2
+          },
+          "doctor_name": {
+            "type": "string",
+            "description": "의사의 full name",
+            "example": "김싸피"
+          },
+          "patient_id": {
+            "type": "integer",
+            "description": "환자의 계정 ID (FK to accounts.id)",
+            "example": 101
+          },
+          "patient_name": {
+            "type": "string",
+            "description": "환자의 full name",
+            "example": "김환자"
+          },
+          "connection_status": {
+            "type": "string",
+            "description": "연결 상태",
+            "enum": [
+              "pending",
+              "approved",
+              "rejected",
+              "disconnected"
+            ],
+            "default": "pending",
+            "example": "pending"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "레코드 생성 일시",
+            "readOnly": true,
+            "example": "2024-05-20T10:00:00Z"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "레코드 마지막 수정 일시",
+            "readOnly": true,
+            "example": "2024-05-20T10:05:00Z"
+          }
+        },
+        "required": [
+          "id",
+          "doctor_id",
+          "patient_id",
+          "connection_status"
+        ]
+      },
+      "ConnectionList": {
+        "type": "object",
+        "properties": {
+          "connections": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Connection"
+            }
+          }
+        },
+        "description": "연결 목록"
+      },
+      "UserSearchResult": {
+        "type": "object",
+        "properties": {
+          "account_id": {
+            "type": "integer",
+            "description": "사용자 계정 ID"
+          },
+          "full_name": {
+            "type": "string",
+            "description": "사용자 전체 이름"
+          },
+          "login_id": {
+            "type": "string",
+            "description": "사용자 로그인 id"
+          }
+        }
+      },
+      "UserSearchResultList": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/UserSearchResult"
+        },
+        "description": "유저 검색 결과 리스트"
+      },
+      "TrainingBasicUploadResponse": {
+        "type": "object",
+        "description": "파일 업로드를 위한 Presigned URL과 생성된 레코드 ID를 포함하는 응답",
+        "properties": {
+          "record_id": {
+            "type": "integer",
+            "description": "데이터베이스에 생성된 음성 기록의 고유 ID",
+            "example": 123
+          },
+          "upload_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "클라이언트가 파일을 직접 업로드할 S3 Presigned URL",
+            "example": "https://your-bucket.s3.amazonaws.com/training-data/1/some-uuid.wav?AWSAccessKeyId=..."
+          }
+        },
+        "required": [
+          "record_id",
+          "upload_url"
+        ]
+      },
+      
+      "TrainingBasicDownloadResponse": {
+        "type": "object",
+        "description": "파일 다운로드를 위한 Presigned URL을 포함하는 응답",
+        "properties": {
+          "download_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "클라이언트가 파일을 직접 다운로드할 S3 Presigned URL",
+            "example": "https://your-bucket.s3.amazonaws.com/training-data/1/some-uuid.wav?AWSAccessKeyId=..."
+           }
+         },
+        "required": [
+          "download_url"
+        ]
+      },
+
+      "UploadStatus": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "파일 업로드 상태",
+            "enum": [
+              "PENDING_UPLOAD",
+              "UPLOAD_COMPLETED",
+              "PROCESSING",
+              "COMPLETED",
+              "FAILED"
+            ]
+          }
+        }
+      }
+    },
+    "responses": {
+      "Success": {
+        "description": "요청 성공 시 공통 응답",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SuccessResponse"
+            }
+          }
+        }
+      },
+      "VerificationResponse": {
+        "description": "유효성, 중복 등 확인 결과 응답",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/CheckResponse"
+            }
+          }
+        }
+      },
+      "Error": {
+        "description": "요청 실패 시 공통 에러 응답",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      },
+      "Login": {
+        "description": "로그인 성공 시 응답",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/LoginResponse"
+            }
+          }
+        }
+      },
+      "TrainingBasicUploadResponse": {
+        "description": "기초 훈련 음성 파일 업로드 주소가 담긴 응답",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/TrainingBasicUploadResponse"
+            }
+          }
+        }
+      },
+      "TrainingBasicDownloadResponse": {
+        "description": "기초 훈련 음성 파일 다운로드 주소가 담긴 응답",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/TrainingBasicDownloadResponse"
+            }
+          }
+        }
+      },
+      "SimpleDashboardResponse": {
+        "description": "대시보드 데이터 응답",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/AdvTrainingInformationList"
+            }
+          }
+        }
+      },
+      "DetailDashboardResponse": {
+        "description": "환자의 모든 음성 분석 정보 배열",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/VoiceInformationList"
+            }
+          }
+        }
+      },
+      "ScheduleList": {
+        "description": "등록된 모든 스케줄 날짜 배열",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ScheduleListResponse"
+            }
+          }
+        }
+      },
+      "ProfileResponse": {
+        "description": "사용자 프로필 정보. 로그인한 사용자의 역할(role)에 따라 환자 또는 의사 프로필이 반환됩니다.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/PatientWithAccountId"
+                },
+                {
+                  "$ref": "#/components/schemas/DoctorWithAccountId"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "PatientOrderResponse": {
+        "description": "환자 목록의 순서 정보. 환자 ID의 배열을 반환합니다.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/PatientOrderPayload"
+            }
+          }
+        }
+      },
+      "ConnectionListResponse": {
+        "description": "리스트 요청에서 대한 리스트 응답 데이터입니다.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ConnectionList"
+            }
+          }
+        }
+      },
+      "SignUpSuccess": {
+        "description": "",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SuccessResponse"
+            },
+            "example": {
+              "message": "회원가입이 성공적으로 완료되었습니다.",
+              "data": {}
+            }
+          }
+        }
+      },
+      "ScreeningResponse": {
+        "description": "음성 데이터를 기반으로 간편하게 진단한 결과",
+        "content": {
+          "application/json": {
+            "schema": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AhScreeningResult"
+                },
+                {
+                  "$ref": "#/components/schemas/SentenceScreeningResult"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "UserSearchResponse": {
+        "description": "검색 성공",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/UserSearchResult"
+            }
+          }
+        }
+      },
+      "UploadStatusResponse": {
+        "description": "파일 업로드 상태 요청에 대한 응답",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/UploadStatus"
+            }
+          }
+        }
+      }
+    },
+    "requestBodies": {
+      "BasicTrainingUploadRequest": {
+        "description": "기초 훈련 음성 파일 업로드 요청",
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/BasicTrainingUploadRequest"
+            }
+          }
+        }
+      },
+      "AdvTrainingResult": {
+        "description": "심화 훈련 결과",
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/AdvTrainingInformation"
+            }
+          }
+        }
+      },
+      "DoctorSignup": {
+        "description": "의사 회원가입 시 필요한 정보",
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/DoctorSignup"
+            }
+          }
+        }
+      },
+      "PatientSignup": {
+        "description": "환자/보호자 회원가입 시 필요한 정보",
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/PatientSignup"
+            }
+          }
+        }
+      },
+      "Login": {
+        "description": "로그인 시 필요한 사용자 ID와 비밀번호",
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/LoginRequest"
+            }
+          }
+        }
+      },
+      "ScheduleDate": {
+        "description": "병원 방문 스케줄 날짜",
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ScheduleDate"
+            }
+          }
+        }
+      },
+      "CheckDuplicateId": {
+        "description": "중복 확인할 아이디",
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/CheckDuplicateIdRequest"
+            }
+          }
+        }
+      },
+      "VerifyPassword": {
+        "description": "확인할 현재 비밀번호",
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/VerifyPasswordRequest"
+            }
+          }
+        }
+      },
+      "VerifyDoctorLicense": {
+        "description": "인증할 의사 면허 번호",
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/VerifyDoctorLicenseRequest"
+            }
+          }
+        }
+      },
+      "Screening": {
+        "description": "분석할 음성 파일과 녹음 유형을 multipart/form-data 형식으로 전송합니다.",
+        "required": true,
+        "content": {
+          "multipart/form-data": {
+            "schema": {
+              "$ref": "#/components/schemas/ScreeningRequest"
+            }
+          }
+        }
+      },
+      "ConnectionRequest": {
+        "description": "데이터 열람을 요청할 환자의 아이디",
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ConnectionRequestPayload"
+            }
+          }
+        }
+      },
+      "UpdateProfile": {
+        "description": "수정할 사용자 정보",
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/UpdateProfileRequest"
+            }
+          }
+        }
+      },
+      "ApproveConnection": {
+        "description": "승인할 데이터 열람 요청의 고유 ID",
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/UpdateConnectionStatus"
+            }
+          }
+        }
+      },
+      "RejectConnection": {
+        "description": "거부할 데이터 열람 요청의 고유 ID",
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/UpdateConnectionStatus"
+            }
+          }
+        }
+      },
+      "UpdatePatientOrder": {
+        "description": "새로운 환자 목록 순서. 환자 ID의 배열입니다.",
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/PatientOrderPayload"
+            }
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "회원관리",
+      "description": "사용자 계정 생성, 로그인, 로그아웃 등 인증 관련 API"
+    },
+    {
+      "name": "진단권유시스템",
+      "description": "음성 파일을 이용한 파킨슨병 진단 관련 API"
+    },
+    {
+      "name": "발성트레이닝",
+      "description": "발성 훈련 및 결과 관리 API"
+    },
+    {
+      "name": "대시보드",
+      "description": "사용자를 위한 대시보드 데이터 조회 API"
+    },
+    {
+      "name": "사용자 - 검색",
+      "description": "사용자 목록 조회 API"
+    },
+    {
+      "name": "사용자 - 프로필 관리",
+      "description": "사용자 프로필 정보 조회 및 수정 API"
+    },
+    {
+      "name": "사용자 - 연결 관리",
+      "description": "의사-환자 간 데이터 열람 연결 관리 API"
+    },
+    {
+      "name": "사용자 - 리스트 순서 관리",
+      "description": "환자 목록 리스트 순서 관리 API"
+    },
+    {
+      "name": "사용자 - 스케줄 관리",
+      "description": "병원 방문 스케줄 관리 API"
+    }
+  ],
+  "paths": {
+    "/auth/patients": {
+      "post": {
+        "tags": [
+          "회원관리"
+        ],
+        "summary": "회원가입(환자, 보호자)",
+        "description": "사용자가 아이디, 비밀번호, 이름, 전화번호를 입력하여 계정을 생성합니다.",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/PatientSignup"
+        },
+        "responses": {
+          "201": {
+            "$ref": "#/components/responses/SignUpSuccess"
+          },
+          "409": {
+            "description": "아이디가 이미 존재하여 회원가입에 실패했습니다."
+          }
+        }
+      }
+    },
+    "/auth/doctors": {
+      "post": {
+        "tags": [
+          "회원관리"
+        ],
+        "summary": "회원가입(의사)",
+        "description": "의사는 일반 사용자와 달리 의사 인증을 해야 계정을 생성할 수 있습니다.",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/DoctorSignup"
+        },
+        "responses": {
+          "201": {
+            "$ref": "#/components/responses/Success"
+          },
+          "400": {
+            "description": "의사 면허증이 유효하지 않을 경우 또는 중복되는 경우"
+          },
+          "409": {
+            "description": "아이디가 이미 존재하여 회원가입에 실패했습니다."
+          }
+        }
+      }
+    },
+    "/auth/verify-password": {
+      "post": {
+        "tags": [
+          "회원관리"
+        ],
+        "summary": "비밀번호 재확인",
+        "description": "개인정보 수정 시 로그인된 유저의 비밀번호를 한번 더 확인합니다.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/VerifyPassword"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/VerificationResponse"
+          }
+        }
+      }
+    },
+    "/auth/sessions": {
+      "post": {
+        "tags": [
+          "회원관리"
+        ],
+        "summary": "로그인",
+        "description": "사용자 ID와 비밀번호를 사용하여 로그인하고, 인증 토큰을 발급받습니다.",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/Login"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Login"
+          },
+          "401": {
+            "description": "존재하지 않는 id 또는 비밀번호 틀림으로 인한 로그인 실패"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "회원관리"
+        ],
+        "summary": "로그아웃",
+        "description": "클라이언트를 로그아웃 시킵니다.(JWT 토큰 블랙리스트에 추가)",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "로그아웃 성공"
+          },
+          "409": {
+            "description": "아이디가 이미 존재하여 회원가입에 실패했습니다."
+          }
+        }
+      }
+    },
+    "/auth/verify-doctor-license": {
+      "post": {
+        "tags": [
+          "회원관리"
+        ],
+        "summary": "의사 면허 인증 요청",
+        "description": "사용자가 제공한 의사 면허 번호를 인증합니다. 인증 성공 시 의사 회원가입을 진행할 수 있습니다.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/VerifyDoctorLicense"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/VerificationResponse"
+          }
+        }
+      }
+    },
+    "/screening": {
+      "post": {
+        "tags": [
+          "진단권유시스템"
+        ],
+        "summary": "진단을 위한 음성 분석",
+        "description": "음성 파일을 받아 AI 모델로 분석하고, 그 결과를 즉시 반환합니다.이 엔드포인트는 인증이 필요 없으며, 결과를 데이터베이스에 저장하지 않습니다.",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/Screening"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ScreeningResponse"
+          },
+          "400": {
+            "description": "잘못된 요청. 음성 파일이 비어 있거나 처리할 수 없는 유형일 때 발생합니다.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/check-duplicate-id": {
+      "post": {
+        "tags": [
+          "회원관리"
+        ],
+        "summary": "아이디 중복 확인",
+        "description": "회원가입 시 아이디 중복 여부를 확인합니다.",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/CheckDuplicateId"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/VerificationResponse"
+          }
+        }
+      }
+    },
+    "/training/basic/upload": {
+      "post": {
+        "tags": [
+          "발성트레이닝"
+        ],
+        "summary": "기본 훈련 음성 파일 제출",
+        "description": "기본 훈련 음성 파일을 업로드할 수 있는 url을 요청합니다.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/BasicTrainingUploadRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/TrainingBasicUploadResponse"
+          },
+          "400": {
+            "description": "허용되지 않는 파일확장자"
+          },
+          "403": {
+            "description": "권한 없음 (환자가 아닌 경우)"
+          },
+          "404": {
+            "description": "연결할 음성 기록을 찾을 수 없습니다."
+          }
+        }
+      }
+    },
+    "/training/basic/upload-status/{record_id}": {
+      "get": {
+        "tags": [
+          "발성트레이닝"
+        ],
+        "summary": "기본 훈련 음성 파일 업로드 상태 조회",
+        "description": "기본 훈련 음성 파일의 업로드 여부를 확인합니다.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "record_id",
+            "in": "path",
+            "required": true,
+            "description": "조회할 기본 훈련 음성 파일의 고유 ID",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/UploadStatusResponse"
+          }
+        }
+      }
+    },
+        "/training/basic/download/{record_id}": {
+      "get": {
+        "tags": ["발성트레이닝"],
+        "summary": "기본 훈련 음성 파일 다운로드 URL 생성",
+        "description": "환자가 자신의 기본 훈련 음성 파일을 다운로드할 수 있는 URL을 생성합니다.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "record_id",
+            "in": "path",
+            "required": true,
+            "description": "다운로드할 음성 파일의 고유 ID",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "기본 훈련 음성 파일 다운로드 URL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/TrainingBasicDownloadResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "허용되지 않는 파일확장자",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "환자가 아닌 경우",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "서버 내부 오류로 인한 실패",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/training/advanced": {
+      "post": {
+        "tags": [
+          "발성트레이닝"
+        ],
+        "summary": "심화 훈련 결과 전송",
+        "description": "심화 훈련 결과를 전송합니다.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/AdvTrainingResult"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Success"
+          }
+        }
+      }
+    },
+    "/dashboard/patient": {
+      "get": {
+        "tags": [
+          "대시보드"
+        ],
+        "summary": "환자/보호자용 대시보드 전체 데이터 조회",
+        "description": "환자/보호자가 확인하는 정보를 조회할 수 있도록 합니다. 기간을 지정하지 않으면 전체 기간에 대한 데이터를 조회합니다.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": false,
+            "description": "조회 시작일 (YYYY-MM-DD)",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "example": "2024-01-01"
+            }
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": false,
+            "description": "조회 종료일 (YYYY-MM-DD)",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "example": "2024-12-31"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/SimpleDashboardResponse"
+          },
+          "400": {
+            "description": "잘못된 기간 요청"
+          },
+          "403": {
+            "description": "권한 없음"
+          }
+        }
+      }
+    },
+    "/dashboard/doctor/{patient_id}": {
+      "get": {
+        "tags": [
+          "대시보드"
+        ],
+        "summary": "의사용 특정 환자 상세 데이터 조회",
+        "description": "의사는 환자에 대한 상세 정보(ex: 음성 파일, 음성 특징 값)를 조회할 수 있습니다. 기간을 지정하지 않으면 전체 기간에 대한 데이터를 조회합니다.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "patient_id",
+            "in": "path",
+            "required": true,
+            "description": "조회할 환자의 고유 ID",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": false,
+            "description": "조회 시작일 (YYYY-MM-DD)",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "example": "2024-01-01"
+            }
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": false,
+            "description": "조회 종료일 (YYYY-MM-DD)",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "example": "2024-12-31"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/DetailDashboardResponse"
+          },
+          "400": {
+            "description": "잘못된 기간 요청"
+          },
+          "403": {
+            "description": "권한 없음"
+          },
+          "404": {
+            "description": "환자 정보를 찾을 수 없음"
+          }
+        }
+      }
+    },
+    "/users/profile": {
+      "get": {
+        "tags": [
+          "사용자 - 프로필 관리"
+        ],
+        "summary": "내 프로필 정보 조회",
+        "description": "현재 로그인된 사용자의 개인 정보를 조회합니다.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ProfileResponse"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "사용자 - 프로필 관리"
+        ],
+        "summary": "내 프로필 정보 수정",
+        "description": "현재 로그인된 사용자의 개인 정보(전화번호 등)를 수정합니다.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/UpdateProfile"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Success"
+          }
+        }
+      }
+    },
+    "/users/schedules": {
+      "get": {
+        "tags": [
+          "사용자 - 스케줄 관리"
+        ],
+        "summary": "병원 방문 스케줄 조회",
+        "description": "로그인된 사용자의 모든 병원 방문 스케줄을 조회합니다.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ScheduleList"
+          },
+          "403": {
+            "description": "환자가 아닙니다."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "사용자 - 스케줄 관리"
+        ],
+        "summary": "병원 방문 스케줄 추가",
+        "description": "새로운 병원 방문 스케줄을 추가합니다.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/ScheduleDate"
+        },
+        "responses": {
+          "200": {
+            "description": "추가된 스케줄 id를 반환",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "schedule_id": {
+                      "type": "integer",
+                      "description": "추가된 스케줄 id"
+                    }
+                  }
+                },
+                "example": {
+                  "schedule_id": 1
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "환자가 아닙니다."
+          },
+          "409": {
+            "description": "이미 해당 날짜에 스케줄이 있습니다."
+          }
+        }
+      }
+    },
+    "/users/schedules/{schedule_id}": {
+      "delete": {
+        "tags": [
+          "사용자 - 스케줄 관리"
+        ],
+        "summary": "병원 방문 스케줄 제거",
+        "description": "기존 병원 방문 스케줄을 제거합니다.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "성공적으로 처리되었으며, 반환할 콘텐츠가 없습니다."
+          },
+          "403": {
+            "description": "환자가 아닙니다."
+          },
+          "409": {
+            "description": "이미 해당 날짜에 스케줄이 없습니다."
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "schedule_id",
+          "in": "path",
+          "required": true,
+          "description": "삭제할 스케줄의 고유 ID",
+          "schema": {
+            "type": "integer",
+            "example": 34
+          }
+        }
+      ]
+    },
+    "/users/connections": {
+      "get": {
+        "tags": [
+          "사용자 - 연결 관리"
+        ],
+        "summary": "연결된 사용자 및 연결 대기 중인 사용자 목록 조회",
+        "description": "자신과 연결이 승인된 사용자 및 대기 중인 사용자 목록 전체를 조회합니다.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ConnectionListResponse"
+          }
+        }
+      }
+    },
+    "/users/connections/requests": {
+      "post": {
+        "tags": [
+          "사용자 - 연결 관리"
+        ],
+        "summary": "(의사용) 환자에게 데이터 열람 요청",
+        "description": "의사가 환자의 user_id으로 데이터 열람 권한을 요청합니다.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/ConnectionRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Success"
+          },
+          "403": {
+            "description": "의사가 아닙니다."
+          },
+          "409": {
+            "description": "이미 연결이 되어있습니다."
+          }
+        }
+      }
+    },
+    "/users/connections/approve": {
+      "put": {
+        "tags": [
+          "사용자 - 연결 관리"
+        ],
+        "summary": "(환자용) 데이터 열람 요청 승인",
+        "description": "환자가 connection_id에 해당하는 요청을 승인합니다.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/ApproveConnection"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Success"
+          },
+          "403": {
+            "description": "환자가 아닙니다."
+          },
+          "404": {
+            "description": "요청 자체가 존재하지 않습니다."
+          },
+          "409": {
+            "description": "튜플 상태가 대기 중이 아닙니다."
+          }
+        }
+      }
+    },
+    "/users/connections/reject": {
+      "put": {
+        "tags": [
+          "사용자 - 연결 관리"
+        ],
+        "summary": "(환자용) 데이터 열람 요청 거부",
+        "description": "환자가 connection_id에 해당하는 요청을 거부합니다.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/RejectConnection"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Success"
+          },
+          "403": {
+            "description": "환자가 아닙니다."
+          },
+          "404": {
+            "description": "요청 자체가 존재하지 않습니다."
+          },
+          "409": {
+            "description": "튜플 상태가 대기 중이 아닙니다."
+          }
+        }
+      }
+    },
+    "/users/connections/{connection_id}": {
+      "delete": {
+        "tags": [
+          "사용자 - 연결 관리"
+        ],
+        "summary": "데이터 열람 연결 해제",
+        "description": "connection_id에 해당하는 의사-환자 연결을 해제합니다.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "connection_id",
+            "in": "path",
+            "required": true,
+            "description": "해제할 연결의 고유 ID",
+            "schema": {
+              "type": "integer",
+              "example": 34
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "성공적으로 처리되었으며, 반환할 콘텐츠가 없습니다."
+          },
+          "404": {
+            "description": "요청 자체가 존재하지 않습니다."
+          },
+          "409": {
+            "description": "튜플 상태가 연결 중이 아닙니다."
+          }
+        }
+      }
+    },
+    "/users/list-order": {
+      "get": {
+        "tags": [
+          "사용자 - 리스트 순서 관리"
+        ],
+        "summary": "(의사용) 환자 목록 순서 조회",
+        "description": "의사가 관리하는 환자 목록의 현재 순서를 조회합니다.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/PatientOrderResponse"
+          },
+          "403": {
+            "description": "의사가 아닙니다."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "사용자 - 리스트 순서 관리"
+        ],
+        "summary": "(의사용) 환자 목록 순서 변경",
+        "description": "의사가 관리하는 환자 목록의 순서를 변경하여 저장합니다.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/UpdatePatientOrder"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Success"
+          },
+          "403": {
+            "description": "의사가 아닙니다."
+          }
+        }
+      }
+    },
+    "/users/search": {
+      "get": {
+        "tags": [
+          "사용자 - 검색"
+        ],
+        "summary": "이름으로 사용자 검색",
+        "description": "쿼리 문자열과 일치하는 이름을 가진 사용자를 검색합니다.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "description": "검색할 사용자 이름의 일부 또는 전체",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "검색 성공",
+            "$ref": "#/components/responses/UserSearchResponse"
+          },
+          "403": {
+            "description": "의사만 환자 검색 가능"
+          },
+          "422": {
+            "description": "쿼리 파라미터 누락"
+          },
+          "400": {
+            "description": "쿼리 파라미터에 빈 문자열 입력"
+          },
+          "500": {
+            "description": "서버 내부 오류"
+          }
+        }
+      }
+    }
+  }
+}
